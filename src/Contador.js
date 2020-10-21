@@ -16,8 +16,6 @@ class Contador extends Component {
     render() {
         return (
             <div>
-               
-            
                 <span>{this.state.contador} </span>
                 <button onClick={this.aumentarContador}>+</button>
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import AppBar from '@material-ui/core/AppBar';
+import { MenuItem } from '@material-ui/core';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
@@ -7,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import { createStyles, fade, Theme, makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,21 +70,34 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function SearchAppBar() {
   const classes = useStyles();
 
+  var loggedOptionsCSS = {
+    display : 'none'
+  }
+
   return (
     <div className={classes.root}>
-      <AppBar>
-        <Toolbar>
+      <AppBar position="fixed">
+
+        <Toolbar className='loggedOptions' style={ loggedOptionsCSS}>
           <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
           >
+            {/* TODO Menuitem desplegable */}
+            <MenuItem primaryText="a" value="a" id="userProfile" />  Ajustes 
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
+
+            <MenuItem primaryText="a" value="a" id="userProfile" />    |
+            <MenuItem primaryText="b" value="b" id="userDocuments" />  Documentos
+
+          <Typography id='appName' className={classes.title} noWrap>
             FloPiDocs
           </Typography>
+          <h6 id='userName'></h6>
+
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -95,8 +110,10 @@ export default function SearchAppBar() {
               }}
               inputProps={{ 'aria-label': 'search' }}
             />
+
           </div>
         </Toolbar>
+
       </AppBar>
     </div>
   );

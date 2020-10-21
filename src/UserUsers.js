@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 export default function useUsers() {
-  const [searching, setSearching] = useState(false);
+  const [searching , setSearching] = useState(false);
   const [users, setUsers] = useState([]);
 
   const getUsersEndpoint = "http://localhost:8080/user/getAllUsers";
@@ -16,3 +16,4 @@ export default function useUsers() {
 
   return { users, searching };
 }
+

@@ -11,7 +11,8 @@
     "material-ui-icons": "^1.0.0-beta.36",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
-    "react-scripts": "3.4.3"
+    "react-scripts": "3.4.3",
+    "use-http": "^1.0.15"
   },
   "scripts": {
     "start": "react-scripts start",
