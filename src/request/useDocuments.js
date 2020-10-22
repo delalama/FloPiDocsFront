@@ -1,19 +1,20 @@
-import getEndpoints from "./Endpoints";
+import React, { useEffect, useState } from "react";
+import getEndPoint from './Endpoints';
 
-export default function useDocuments() {
+function useDocuments() {
   const [searching, setSearching] = useState(false);
   const [documents, setDocuments] = useState([]);
 
-  const query =
-    getEndpoints("getAllDocumentsByUserId") + localStorage.getItem("userId");
+  const query = getEndPoint("getAllDocumentsByUserId") + localStorage.getItem('userId');
 
   useEffect(() => {
     setSearching(true);
     fetch(query)
       .then((response) => response.json())
-      .then(setDocuments)
+      .then(setDocuments, console.log())
       .finally(() => setSearching(false));
   }, []);
 
   return { documents, searching };
 }
+export default useDocuments;
