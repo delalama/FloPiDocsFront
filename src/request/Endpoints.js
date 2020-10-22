@@ -9,6 +9,9 @@ export default function getEndPoint(value: string) {
         case "getAllDocumentsByUserId": 
             endpoint = '/document/getAllDocumentsByUserId?userId=';
             break;
+        case "getFieldsByDocumentId": 
+            endpoint = '/field/getFieldByDocumentId?documentId=';
+            break;
         case "whatever": 
             endpoint = 'whatever'; break;
     }
