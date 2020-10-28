@@ -38,10 +38,8 @@ function getFieldsById(id) {
   console.log("getFields!!" + id);
 }
 
-function createField(id, documentId, fieldName, fieldValue) {
+function createField(fieldName, fieldValue) {
   return {
-    id,
-    documentId,
     fieldName,
     fieldValue,
   };
@@ -59,6 +57,16 @@ function Row(props) {
 
   return (
     <React.Fragment>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
+          <Collapse
+            in={open}
+            timeout="auto"
+            unmountOnExit
+            id="fieldsContainer"
+          ></Collapse>
+        </TableCell>
+      </TableRow>
       <TableRow className={classes.root}>
         <TableCell>
           <IconButton
@@ -76,16 +84,6 @@ function Row(props) {
         <TableCell>{row.purpose}</TableCell>
         <TableCell>{row.content}</TableCell>
         <TableCell>{row.date}</TableCell>
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse
-            in={open}
-            timeout="auto"
-            unmountOnExit
-            id="fieldsContainer"
-          ></Collapse>
-        </TableCell>
       </TableRow>
       {selectedDocumentId && <Field documentId={selectedDocumentId} />}
     </React.Fragment>
@@ -142,28 +140,28 @@ export default function CollapsibleTable() {
 
 function Field({ documentId }) {
   const { fields, searching } = useDocumentFields(documentId);
+  let tableStyle = {
+    marginTop: "3em",
+  };
+  const classes = useRowStyles();
 
+  console.log(documentId);
   return (
-    <Box margin={1}>
-      <Table size="small" aria-label="purchases">
-        <TableHead>
-          <TableRow>
-            <TableCell>Field</TableCell>
-            <TableCell>Value</TableCell>
-            <TableCell>Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {searching && "searching..."}
-          {fields
-            ?.map(({ id, documentId, fieldName, fieldValue }) =>
-              createField(id, documentId, fieldName, fieldValue)
-            )
-            .map((row) => (
-              <Field key={row.title} row={row} />
-            ))}
-        </TableBody>
-      </Table>
-    </Box>
+    <React.Fragment>
+            <TableCell> CAMPOS</TableCell>
+      {searching && "searching..."}
+      {fields
+        ?.map(({ fieldName, fieldValue }) =>
+          createField(fieldName, fieldValue)
+        )
+        .map((field, index) => (
+         <TableRow className={classes.root}>
+            <TableCell> </TableCell>
+            <TableCell> {field.fieldName}</TableCell>
+            <TableCell> {field.fieldValue}</TableCell>
+            </TableRow>
+        ))}
+    </React.Fragment>
+
   );
 }
