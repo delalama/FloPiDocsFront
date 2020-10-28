@@ -21,6 +21,7 @@ export default function LoginForm2({ onUserLogin }) {
     email: "",
     password: "",
   };
+  
   function setEmail(email) {
     var isBirel = Boolean(email.substring(0, 4).toLowerCase() === "bire");
     const message = document.getElementById("message");

@@ -31,45 +31,36 @@ function createData(id,title, purpose, content, date, protein, price) {
     purpose,
     content,
     date,
-    id,
-    protein,
-    price,
-    history: [
-      {
-        name: "history",
-        date: "2020-01-05",
-        customerId: "11091700",
-        amount: 3,
-      },
-      { date: "2020-01-02", customerId: "Anonymous", amount: 1 },
-    ],
-    field: [
-      { concept: "2020-01-05", value: "11091700" },
-      { date: "2020-01-02", customerId: "Anonymous", amount: 1 },
-    ],
   };
 }
 
-function createField(fields) {
+function getFieldsById(id) {
+  console.log("getFields!!" + id);
+}
+
+function createField(id, documentId, fieldName, fieldValue) {
   return {
-    fields: [
-      fields.fieldName,
-      fields.fieldValue
-    ]
+      id,
+      documentId,
+      fieldName,
+      fieldValue
   };
 }
 
+//TODO Row es document
+//TODO Crear función field, exporta la subtabla field
+//TODO Separar las entidades
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
   var documentId = '';
-  const { fields, searching } = useDocumentFields(documentId);
 
   function openAndGetFields(event) {
     if(event.target.tagName === 'svg'){documentId = event.target.parentNode.parentElement.id;}
-    
-    console.log(fields);
+    console.log(documentId);
+    Field();
+    // console.log(Fields);
     setOpen(!open);
   }
 
@@ -81,7 +72,7 @@ function Row(props) {
             id={row.id}
             aria-label="expand row"
             size="small"
-            onClick={openAndGetFields}
+            onClick={Field}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -95,40 +86,8 @@ function Row(props) {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box margin={1}>
-              {/* <Typography variant="h6" gutterBottom component="div">Fields</Typography> */}
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Field</TableCell>
-                    <TableCell>Value</TableCell>
-                    <TableCell>Amount</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {searching && "searching..."}
-                  {fields
-                    ?.map(({ fieldName, fieldValue }) =>
-                      createData(fields.concept = fieldName, fieldValue)
-                    )
-                    .map((row) => (
-                      <Row key={row.title} row={row} />
-                    ))}
-                </TableBody>
-                {/* <TableBody>
-                  {row.history.map((historyRow) => (
-                    <TableRow key={historyRow.date}>
-                      <TableCell component="th" scope="row">
-                        {historyRow.date}
-                      </TableCell>
-                      <TableCell>{historyRow.customerId}</TableCell>
-                      <TableCell>{historyRow.amount}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody> */}
-              </Table>
-            </Box>
+          <Collapse in={open} timeout="auto" unmountOnExit id="fieldsContainer">
+         
           </Collapse>
         </TableCell>
       </TableRow>
@@ -141,19 +100,12 @@ Row.propTypes = {
     title: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    history: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number,
-        customerId: PropTypes.string,
-        date: PropTypes.string,
-      })
-    ).isRequired,
     field: PropTypes.arrayOf(
       PropTypes.shape({
         fieldName: PropTypes.number,
         fieldValue: PropTypes.string,
       })
-    ).isRequired,
+    ),
   }).isRequired,
 };
 
@@ -182,11 +134,44 @@ export default function CollapsibleTable() {
             // esto es una warrada? seteo el id del icono como el id del documento para usarlo en el getFields(docId)
               createData(id,title, purpose, content, date)
             )
-            .map((row) => (
-              <Row key={row.title} row={row} />
+            .map((row, index) => (
+              <Row key={row.id} row={row} />
             ))}
         </TableBody>
       </Table>
     </TableContainer>
   );
+}
+
+
+function Field(props){
+  var documentId = '';
+  const { fields, searching } = useDocumentFields();
+  // const [open, setOpen] = React.useState(false);
+ 
+
+  return (
+    <Box margin={1}>
+    {/* <Typography variant="h6" gutterBottom component="div">Fields</Typography> */}
+    <Table size="small" aria-label="purchases">
+      <TableHead>
+        <TableRow>
+          <TableCell>Field</TableCell>
+          <TableCell>Value</TableCell>
+          <TableCell>Amount</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {searching && "searching..."}
+        {fields
+          ?.map(({ id, documentId, fieldName, fieldValue }) =>
+            createField(id, documentId, fieldName, fieldValue)
+          )
+          .map((row) => (
+            <Field key={row.title} row={row} />
+          ))}
+      </TableBody>
+    </Table>
+  </Box>
+  )
 }
