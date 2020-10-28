@@ -24,7 +24,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(id,title, purpose, content, date, protein, price) {
+function createData(id, title, purpose, content, date, protein, price) {
   return {
     id,
     title,
@@ -40,10 +40,10 @@ function getFieldsById(id) {
 
 function createField(id, documentId, fieldName, fieldValue) {
   return {
-      id,
-      documentId,
-      fieldName,
-      fieldValue
+    id,
+    documentId,
+    fieldName,
+    fieldValue,
   };
 }
 
@@ -53,26 +53,19 @@ function createField(id, documentId, fieldName, fieldValue) {
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
+  const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const classes = useRowStyles();
-  var documentId = '';
-
-  function openAndGetFields(event) {
-    if(event.target.tagName === 'svg'){documentId = event.target.parentNode.parentElement.id;}
-    console.log(documentId);
-    Field();
-    // console.log(Fields);
-    setOpen(!open);
-  }
+  var documentId = "";
 
   return (
     <React.Fragment>
       <TableRow className={classes.root}>
-        <TableCell >
+        <TableCell>
           <IconButton
             id={row.id}
             aria-label="expand row"
             size="small"
-            onClick={Field}
+            onClick={() => setSelectedDocumentId(row.id)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -86,11 +79,15 @@ function Row(props) {
       </TableRow>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit id="fieldsContainer">
-         
-          </Collapse>
+          <Collapse
+            in={open}
+            timeout="auto"
+            unmountOnExit
+            id="fieldsContainer"
+          ></Collapse>
         </TableCell>
       </TableRow>
+      {selectedDocumentId && <Field documentId={selectedDocumentId} />}
     </React.Fragment>
   );
 }
@@ -130,9 +127,9 @@ export default function CollapsibleTable() {
         <TableBody>
           {searching && "searching..."}
           {documents
-            ?.map(({ id,title, purpose, content, date }) =>
-            // esto es una warrada? seteo el id del icono como el id del documento para usarlo en el getFields(docId)
-              createData(id,title, purpose, content, date)
+            ?.map(({ id, title, purpose, content, date }) =>
+              // esto es una warrada? seteo el id del icono como el id del documento para usarlo en el getFields(docId)
+              createData(id, title, purpose, content, date)
             )
             .map((row, index) => (
               <Row key={row.id} row={row} />
@@ -143,35 +140,30 @@ export default function CollapsibleTable() {
   );
 }
 
-
-function Field(props){
-  var documentId = '';
-  const { fields, searching } = useDocumentFields();
-  // const [open, setOpen] = React.useState(false);
- 
+function Field({ documentId }) {
+  const { fields, searching } = useDocumentFields(documentId);
 
   return (
     <Box margin={1}>
-    {/* <Typography variant="h6" gutterBottom component="div">Fields</Typography> */}
-    <Table size="small" aria-label="purchases">
-      <TableHead>
-        <TableRow>
-          <TableCell>Field</TableCell>
-          <TableCell>Value</TableCell>
-          <TableCell>Amount</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {searching && "searching..."}
-        {fields
-          ?.map(({ id, documentId, fieldName, fieldValue }) =>
-            createField(id, documentId, fieldName, fieldValue)
-          )
-          .map((row) => (
-            <Field key={row.title} row={row} />
-          ))}
-      </TableBody>
-    </Table>
-  </Box>
-  )
+      <Table size="small" aria-label="purchases">
+        <TableHead>
+          <TableRow>
+            <TableCell>Field</TableCell>
+            <TableCell>Value</TableCell>
+            <TableCell>Amount</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {searching && "searching..."}
+          {fields
+            ?.map(({ id, documentId, fieldName, fieldValue }) =>
+              createField(id, documentId, fieldName, fieldValue)
+            )
+            .map((row) => (
+              <Field key={row.title} row={row} />
+            ))}
+        </TableBody>
+      </Table>
+    </Box>
+  );
 }

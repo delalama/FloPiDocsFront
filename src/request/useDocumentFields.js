@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import getEndPoint from './Endpoints';
+import getEndPoint from "./Endpoints";
 
 function useDocumentFields(documentId) {
   const [searching, setSearching] = useState(false);
@@ -11,7 +11,10 @@ function useDocumentFields(documentId) {
     setSearching(true);
     fetch(query)
       .then((response) => response.json())
-      .then(setFields, console.log())
+      .then((response) => {
+        setFields(response);
+        console.log(response);
+      })
       .finally(() => setSearching(false));
   }, []);
 
