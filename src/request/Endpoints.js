@@ -12,8 +12,10 @@ export default function getEndPoint(value: string) {
         case "getFieldsByDocumentId": 
             endpoint = '/field/getFieldByDocumentId?documentId=';
             break;
-        case "whatever": 
-            endpoint = 'whatever'; break;
+        case "countByUserId": 
+            endpoint = '/document/countByUserId?userId='; break;
+        case "saveDocument": 
+            endpoint = '/document/createDocument?userId='; break;
     }
     return host + endpoint; 
 }

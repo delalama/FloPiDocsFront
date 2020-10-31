@@ -15,6 +15,8 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import useDocuments from "../request/useDocuments";
 import useDocumentFields from "../request/useDocumentFields";
+import TablePaginationDemo from "./TablePagination";
+import Button from '@material-ui/core/Button';
 
 const useRowStyles = makeStyles({
   root: {
@@ -38,8 +40,9 @@ function getFieldsById(id) {
   console.log("getFields!!" + id);
 }
 
-function createField(fieldName, fieldValue) {
+function createField(id,fieldName, fieldValue) {
   return {
+    id,
     fieldName,
     fieldValue,
   };
@@ -73,7 +76,11 @@ function Row(props) {
             id={row.id}
             aria-label="expand row"
             size="small"
-            onClick={() => setSelectedDocumentId(row.id)}
+            onClick={() => {
+              setOpen(!open)
+              setSelectedDocumentId(row.id)}
+            }
+            // onClick={() => setOpen(!open)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -81,11 +88,11 @@ function Row(props) {
         <TableCell component="th" scope="row">
           {row.title}
         </TableCell>
-        <TableCell>{row.purpose}</TableCell>
-        <TableCell>{row.content}</TableCell>
+        <TableCell maxLength="12">{row.purpose}</TableCell>
+        <TableCell maxLength="10">{row.content}</TableCell>
         <TableCell>{row.date}</TableCell>
       </TableRow>
-      {selectedDocumentId && <Field documentId={selectedDocumentId} />}
+      {selectedDocumentId && open && <Field documentId={selectedDocumentId} />}
     </React.Fragment>
   );
 }
@@ -109,6 +116,7 @@ export default function CollapsibleTable() {
   let tableStyle = {
     marginTop: "3em",
   };
+
 
   return (
     <TableContainer style={tableStyle} component={Paper} id="documentsTable">
@@ -134,6 +142,7 @@ export default function CollapsibleTable() {
             ))}
         </TableBody>
       </Table>
+      <TablePaginationDemo ></TablePaginationDemo>
     </TableContainer>
   );
 }
@@ -145,20 +154,25 @@ function Field({ documentId }) {
   };
   const classes = useRowStyles();
 
+  const fieldStyle = {
+    color: 'green',
+  }
+
   console.log(documentId);
   return (
     <React.Fragment>
-            <TableCell> CAMPOS</TableCell>
-      {searching && "searching..."}
+      {/* {searching && "searching..."} */}
       {fields
-        ?.map(({ fieldName, fieldValue }) =>
-          createField(fieldName, fieldValue)
+        ?.map(({ id,fieldName, fieldValue }) =>
+          createField(id,fieldName, fieldValue)
         )
         .map((field, index) => (
-         <TableRow className={classes.root}>
+         <TableRow key={field.id} className={classes.root} >
             <TableCell> </TableCell>
-            <TableCell> {field.fieldName}</TableCell>
-            <TableCell> {field.fieldValue}</TableCell>
+            <TableCell style={fieldStyle} > {field.fieldName}</TableCell>
+            <TableCell style={fieldStyle} > {field.fieldValue}</TableCell>
+            <TableCell> <Button variant="contained" color="primary">EDIT</Button></TableCell>
+            <TableCell> <Button variant="contained" color="secondary">DELETE</Button></TableCell>
             </TableRow>
         ))}
     </React.Fragment>

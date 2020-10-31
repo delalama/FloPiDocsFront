@@ -19,7 +19,9 @@ function App() {
           <button onClick={consoleValues}>ConsoleStateValues</button>
           <button onClick={CleanLocalStorage}>CleanLocalStorage</button>
           <AppBar />
+
           <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
+          <button onClick={handleOnUserLogin}>Desaparece tabla</button>
           {showTable && <CollapsibleTable />}
         </div>
         {/* <Users></Users> */}
