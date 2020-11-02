@@ -4,19 +4,14 @@ import AppBar from "./components/AppBar";
 import LoginForm from "./components/LoginFom";
 import CollapsibleTable from "./components/DocumentsTable";
 import { consoleValues, CleanLocalStorage } from "./State";
+import useDocuments from "./request/useDocuments";
 
 function App() {
   const [showTable, setShowTable] = useState(false);
-  const [tableState, setTableState] = useState(false);
+  const { documents, searching, refresh } = useDocuments();
 
   function handleOnUserLogin() {
     setShowTable(true);
-  }
-
-  function onRefreshtable(){
-    console.log('refreshed from app.js!');
-    setTableState(true);
-    console.log(tableState);
   }
 
   return (
@@ -25,11 +20,12 @@ function App() {
         <div>
           <button onClick={consoleValues}>ConsoleStateValues</button>
           <button onClick={CleanLocalStorage}>CleanLocalStorage</button>
-          <AppBar refreshTable={onRefreshtable}/>
-
+          <AppBar refreshTable={() => refresh()} />
           <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
           <button onClick={handleOnUserLogin}>Desaparece tabla</button>
-          {showTable && <CollapsibleTable refreshTable={tableState}/>}
+          {showTable && (
+            <CollapsibleTable documents={documents} searching={searching} />
+          )}
         </div>
       </header>
     </div>

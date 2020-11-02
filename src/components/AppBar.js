@@ -80,7 +80,7 @@ export default function SearchAppBar({ refreshTable }) {
   };
 
   function onRefreshTable() {
-    refreshTable && refreshTable(true);
+    refreshTable && refreshTable();
     console.log("refreshing table event");
   }
 

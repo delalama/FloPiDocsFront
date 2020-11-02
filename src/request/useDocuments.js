@@ -1,26 +1,35 @@
-import query ,{ useEffect, useState } from "react";
-import getEndPoint from './Endpoints';
+import query, { useEffect, useState } from "react";
+import getEndPoint from "./Endpoints";
 
 function useDocuments() {
   const [searching, setSearching] = useState(false);
   const [documents, setDocuments] = useState([]);
 
-  const query = getEndPoint("getAllDocumentsByUserId") + localStorage.getItem('userId');
+  const query =
+    getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
 
   const a = () => {
     setDocuments([]);
-      
-    setSearching();      
-  }
 
-  useEffect(() => {
+    setSearching();
+  };
+
+  function fetchDocuments() {
     setSearching(true);
     fetch(query)
       .then((response) => response.json())
       .then(setDocuments, console.log())
       .finally(() => setSearching(false));
+  }
+
+  useEffect(() => {
+    fetchDocuments();
   }, []);
 
-  return { documents, searching };
+  function refresh() {
+    fetchDocuments();
+  }
+
+  return { documents, searching, refresh };
 }
 export default useDocuments;

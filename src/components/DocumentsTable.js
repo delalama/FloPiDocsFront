@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
@@ -15,7 +15,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import useDocuments from "../request/useDocuments";
 import useDocumentFields from "../request/useDocumentFields";
 import TablePaginationDemo from "./TablePagination";
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
 
 const useRowStyles = makeStyles({
   root: {
@@ -39,7 +39,7 @@ function getFieldsById(id) {
   console.log("getFields!!" + id);
 }
 
-function createField(id,fieldName, fieldValue) {
+function createField(id, fieldName, fieldValue) {
   return {
     id,
     fieldName,
@@ -76,9 +76,9 @@ function Row(props) {
             aria-label="expand row"
             size="small"
             onClick={() => {
-              setOpen(!open)
-              setSelectedDocumentId(row.id)}
-            }
+              setOpen(!open);
+              setSelectedDocumentId(row.id);
+            }}
             // onClick={() => setOpen(!open)}
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -110,22 +110,17 @@ Row.propTypes = {
   }).isRequired,
 };
 
-
-
-export default function CollapsibleTable({refreshTable}) {
- 
+export default function CollapsibleTable({ doduments, searching }) {
   const { refreshTableState, setRefresh } = useState(false);
   useEffect(() => {
     console.log(`You clicked ${refreshTableState} times`);
   });
 
-  const { documents, searching } = useDocuments();
-
   let tableStyle = {
     marginTop: "3em",
-  };  
+  };
 
-  return (  
+  return (
     <TableContainer style={tableStyle} component={Paper} id="documentsTable">
       <Table aria-label="collapsible table">
         <TableHead>
@@ -136,22 +131,23 @@ export default function CollapsibleTable({refreshTable}) {
             <TableCell>Date</TableCell>
           </TableRow>
         </TableHead>
-        { !refreshTableState && <TableBody>
-          {searching && "searching..."}
-          {documents
-            ?.map(({ id, title, purpose, content, date }) =>
-              createData(id, title, purpose, content, date)
-            )
-            .map((row, index) => (
-              <Row key={row.id} row={row} />
-            ))}
-        </TableBody>}
+        {!refreshTableState && (
+          <TableBody>
+            {searching && "searching..."}
+            {documents
+              ?.map(({ id, title, purpose, content, date }) =>
+                createData(id, title, purpose, content, date)
+              )
+              .map((row, index) => (
+                <Row key={row.id} row={row} />
+              ))}
+          </TableBody>
+        )}
       </Table>
-      <TablePaginationDemo ></TablePaginationDemo>
+      <TablePaginationDemo></TablePaginationDemo>
     </TableContainer>
   );
 }
-
 
 function Field({ documentId }) {
   const { fields, searching } = useDocumentFields(documentId);
@@ -162,27 +158,36 @@ function Field({ documentId }) {
   const classes = useRowStyles();
 
   const fieldStyle = {
-    color: 'green',
-  }
+    color: "green",
+  };
 
   console.log(documentId);
   return (
     <React.Fragment>
       {/* {searching && "searching..."} */}
       {fields
-        ?.map(({ id,fieldName, fieldValue }) =>
-          createField(id,fieldName, fieldValue)
+        ?.map(({ id, fieldName, fieldValue }) =>
+          createField(id, fieldName, fieldValue)
         )
         .map((field, index) => (
-         <TableRow key={field.id} className={classes.root} >
+          <TableRow key={field.id} className={classes.root}>
             <TableCell> </TableCell>
-            <TableCell style={fieldStyle} > {field.fieldName}</TableCell>
-            <TableCell style={fieldStyle} > {field.fieldValue}</TableCell>
-            <TableCell> <Button variant="contained" color="primary">EDIT</Button></TableCell>
-            <TableCell> <Button variant="contained" color="secondary">DELETE</Button></TableCell>
-            </TableRow>
+            <TableCell style={fieldStyle}> {field.fieldName}</TableCell>
+            <TableCell style={fieldStyle}> {field.fieldValue}</TableCell>
+            <TableCell>
+              {" "}
+              <Button variant="contained" color="primary">
+                EDIT
+              </Button>
+            </TableCell>
+            <TableCell>
+              {" "}
+              <Button variant="contained" color="secondary">
+                DELETE
+              </Button>
+            </TableCell>
+          </TableRow>
         ))}
     </React.Fragment>
-
   );
 }
