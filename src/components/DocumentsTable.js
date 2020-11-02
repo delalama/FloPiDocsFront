@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useState , useEffect} from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import Box from "@material-ui/core/Box";
 import Collapse from "@material-ui/core/Collapse";
 import IconButton from "@material-ui/core/IconButton";
 import Table from "@material-ui/core/Table";
@@ -111,44 +110,52 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function CollapsibleTable() {
+
+
+export default function CollapsibleTable({refreshTable}) {
+ 
+  const { refreshTableState, setRefresh } = useState(false);
+  useEffect(() => {
+    console.log(`You clicked ${refreshTableState} times`);
+  });
+
   const { documents, searching } = useDocuments();
+
   let tableStyle = {
     marginTop: "3em",
-  };
+  };  
 
-
-  return (
+  return (  
     <TableContainer style={tableStyle} component={Paper} id="documentsTable">
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
-            <TableCell />
-            <TableCell>Title</TableCell>
+            <TableCell>Title </TableCell>
             <TableCell>Purpose</TableCell>
             <TableCell>Content</TableCell>
             <TableCell>Date</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        { !refreshTableState && <TableBody>
           {searching && "searching..."}
           {documents
             ?.map(({ id, title, purpose, content, date }) =>
-              // esto es una warrada? seteo el id del icono como el id del documento para usarlo en el getFields(docId)
               createData(id, title, purpose, content, date)
             )
             .map((row, index) => (
               <Row key={row.id} row={row} />
             ))}
-        </TableBody>
+        </TableBody>}
       </Table>
       <TablePaginationDemo ></TablePaginationDemo>
     </TableContainer>
   );
 }
 
+
 function Field({ documentId }) {
   const { fields, searching } = useDocumentFields(documentId);
+
   let tableStyle = {
     marginTop: "3em",
   };

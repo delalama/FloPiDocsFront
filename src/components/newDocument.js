@@ -30,7 +30,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog() {
+export default function FullScreenDialog({refreshTable}) {
+ 
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -44,6 +45,7 @@ export default function FullScreenDialog() {
     const content = document.getElementById('newDocContent').value;
 
     SaveDocuments(title,purpose,content);
+    refreshTable && refreshTable(true);
     setOpen(false);
   };
 

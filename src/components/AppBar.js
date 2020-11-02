@@ -72,12 +72,17 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-export default function SearchAppBar() {
+export default function SearchAppBar({ refreshTable }) {
   const classes = useStyles();
 
   var loggedOptionsCSS = {
     display: "none",
   };
+
+  function onRefreshTable() {
+    refreshTable && refreshTable(true);
+    console.log("refreshing table event");
+  }
 
   return (
     <div className={classes.root}>
@@ -94,8 +99,7 @@ export default function SearchAppBar() {
             <MenuIcon />
           </IconButton>
           <div>
-            
-            <FullScreenDialog></FullScreenDialog>
+            <FullScreenDialog refreshTable={onRefreshTable}></FullScreenDialog>
           </div>
 
           <Typography id="appName" className={classes.title} noWrap>

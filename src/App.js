@@ -7,9 +7,16 @@ import { consoleValues, CleanLocalStorage } from "./State";
 
 function App() {
   const [showTable, setShowTable] = useState(false);
+  const [tableState, setTableState] = useState(false);
 
   function handleOnUserLogin() {
     setShowTable(true);
+  }
+
+  function onRefreshtable(){
+    console.log('refreshed from app.js!');
+    setTableState(true);
+    console.log(tableState);
   }
 
   return (
@@ -18,15 +25,12 @@ function App() {
         <div>
           <button onClick={consoleValues}>ConsoleStateValues</button>
           <button onClick={CleanLocalStorage}>CleanLocalStorage</button>
-          <AppBar />
+          <AppBar refreshTable={onRefreshtable}/>
 
           <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
           <button onClick={handleOnUserLogin}>Desaparece tabla</button>
-          {showTable && <CollapsibleTable />}
+          {showTable && <CollapsibleTable refreshTable={tableState}/>}
         </div>
-        {/* <Users></Users> */}
-
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
       </header>
     </div>
   );
