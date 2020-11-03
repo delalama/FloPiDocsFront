@@ -27,7 +27,7 @@ function useDocuments() {
   }, []);
 
   function refresh() {
-    fetchDocuments();
+    setTimeout(function(){ fetchDocuments(); }, 500);
   }
 
   return { documents, searching, refresh };

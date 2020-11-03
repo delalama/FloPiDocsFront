@@ -11,9 +11,9 @@ import {
   Theme,
   makeStyles,
 } from "@material-ui/core/styles";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import FullScreenDialog from "./newDocument";
+import SimpleMenu from "./DropDownMenu";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -95,8 +95,7 @@ export default function SearchAppBar({ refreshTable }) {
             aria-label="open drawer"
           >
             {/* TODO Menuitem desplegable */}
-            <MenuItem /> Ajustes
-            <MenuIcon />
+            <SimpleMenu></SimpleMenu>
           </IconButton>
           <div>
             <FullScreenDialog refreshTable={onRefreshTable}></FullScreenDialog>

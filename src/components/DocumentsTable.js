@@ -16,6 +16,8 @@ import useDocuments from "../request/useDocuments";
 import useDocumentFields from "../request/useDocumentFields";
 import TablePaginationDemo from "./TablePagination";
 import Button from "@material-ui/core/Button";
+import DeleteDialogs from "./deleteDialog";
+import EditDialogs from "./editDialog";
 
 const useRowStyles = makeStyles({
   root: {
@@ -110,7 +112,7 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function CollapsibleTable({ doduments, searching }) {
+export default function CollapsibleTable({ documents, searching }) {
   const { refreshTableState, setRefresh } = useState(false);
   useEffect(() => {
     console.log(`You clicked ${refreshTableState} times`);
@@ -125,6 +127,7 @@ export default function CollapsibleTable({ doduments, searching }) {
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
+            <TableCell></TableCell>
             <TableCell>Title </TableCell>
             <TableCell>Purpose</TableCell>
             <TableCell>Content</TableCell>
@@ -161,6 +164,9 @@ function Field({ documentId }) {
     color: "green",
   };
 
+
+  function showDeleteDialog() {}
+
   console.log(documentId);
   return (
     <React.Fragment>
@@ -176,15 +182,19 @@ function Field({ documentId }) {
             <TableCell style={fieldStyle}> {field.fieldValue}</TableCell>
             <TableCell>
               {" "}
-              <Button variant="contained" color="primary">
+              {/* <Button variant="contained" color="primary" fieldId={field.id}>
                 EDIT
               </Button>
             </TableCell>
             <TableCell>
               {" "}
-              <Button variant="contained" color="secondary">
+              <Button variant="contained" color="secondary" fieldId={field.id}>
                 DELETE
-              </Button>
+              </Button> */}
+              <EditDialogs fieldId={field.id} fieldName={field.fieldName} fieldValue={field.fieldValue}></EditDialogs>
+            </TableCell>
+            <TableCell>
+              <DeleteDialogs fieldId={field.id} fieldName={field.fieldName} fieldValue={field.fieldValue}></DeleteDialogs>
             </TableCell>
           </TableRow>
         ))}

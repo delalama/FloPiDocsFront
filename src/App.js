@@ -18,11 +18,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>
-          <button onClick={consoleValues}>ConsoleStateValues</button>
+          {/* <button onClick={consoleValues}>ConsoleStateValues</button>
           <button onClick={CleanLocalStorage}>CleanLocalStorage</button>
+          <button onClick={handleOnUserLogin}>Desaparece tabla</button> */}
           <AppBar refreshTable={() => refresh()} />
+
           <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
-          <button onClick={handleOnUserLogin}>Desaparece tabla</button>
           {showTable && (
             <CollapsibleTable documents={documents} searching={searching} />
           )}
