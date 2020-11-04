@@ -50,7 +50,8 @@ export default function LoginForm2({ onUserLogin }) {
 
       localStorage.setItem("userId", userId);
       var firstName = response.firstName;
-      document.getElementById("userName").innerHTML = firstName;
+      // document.getElementById("userName").innerHTML = firstName;
+      localStorage.setItem('userName',firstName);
       var login = document.getElementById("loginDiv");
       login.parentNode.removeChild(login);
 

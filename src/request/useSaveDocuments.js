@@ -1,4 +1,3 @@
-import query, { useEffect, useState } from "react";
 import getEndPoint from "./Endpoints";
 
 //DEADVID -> HACERLO CON useEffect.........desde donde llamaría useSaveDocuments?
@@ -16,7 +15,7 @@ function SaveDocuments(title, purpose, content) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ title: "React POST Request Example" }),
+    body: JSON.stringify({ title: "saveDocument" }),
   };
 
   fetch(query, requestOptions)

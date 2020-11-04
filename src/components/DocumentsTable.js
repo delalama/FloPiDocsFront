@@ -12,10 +12,8 @@ import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
-import useDocuments from "../request/useDocuments";
 import useDocumentFields from "../request/useDocumentFields";
 import TablePaginationDemo from "./TablePagination";
-import Button from "@material-ui/core/Button";
 import DeleteDialogs from "./deleteDialog";
 import EditDialogs from "./editDialog";
 

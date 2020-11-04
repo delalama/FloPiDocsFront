@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,7 +8,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-
+import deleteField from './../request/deleteField';
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -55,18 +55,28 @@ const deleteButtonStyle = {
     background: 'red',
   };
 
+
 export default function DeleteDialogs(props) {
   const [open, setOpen] = React.useState(false);
+  const [safeDeleteOption, setSafeDeleteOption] = useState();
+
+  const fieldId=props.fieldId;
 
   const handleClickOpen = () => {
-    setOpen(true);
+    var safeDeleteActive = null;
+    localStorage.getItem('safeDelete') == 'true' ? safeDeleteActive=true: safeDeleteActive=false;
+    setSafeDeleteOption(safeDeleteActive);
+    
+    if(safeDeleteActive){
+      setOpen(true);
+    }else{deleteField(fieldId);}
   };
   const handleClose = () => {
       console.log('vamos a borrar el field con id ' + fieldId);
+      deleteField(fieldId);
     setOpen(false);
   };
 
-  const fieldId=props.fieldId;
 
   return (
     <div>

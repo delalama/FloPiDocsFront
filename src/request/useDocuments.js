@@ -1,4 +1,4 @@
-import query, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import getEndPoint from "./Endpoints";
 
 function useDocuments() {
@@ -8,11 +8,6 @@ function useDocuments() {
   const query =
     getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
 
-  const a = () => {
-    setDocuments([]);
-
-    setSearching();
-  };
 
   function fetchDocuments() {
     setSearching(true);

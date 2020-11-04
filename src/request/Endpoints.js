@@ -1,5 +1,5 @@
 
-export default function getEndPoint(value: string) {
+export default function getEndPoint(value) {
     var host = 'http://localhost:8080';
     var endpoint;
     switch(value) {
@@ -16,6 +16,12 @@ export default function getEndPoint(value: string) {
             endpoint = '/document/countByUserId?userId='; break;
         case "saveDocument": 
             endpoint = '/document/createDocument?userId='; break;
+        case "getOptions": 
+            endpoint = '/accountOptions/getAccountOptions?userId='; break;
+        case "changeSafeDelete": 
+            endpoint = '/accountOptions/changeSafeDelete?userId='; break;
+        case "deleteField": 
+            endpoint = '/field/deleteFieldById?fieldId='; break;
     }
     return host + endpoint; 
 }

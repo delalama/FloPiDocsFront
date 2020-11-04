@@ -5,15 +5,12 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
-import {
-  createStyles,
-  fade,
-  Theme,
-  makeStyles,
+import {createStyles,fade,Theme, makeStyles,
 } from "@material-ui/core/styles";
 import SearchIcon from "@material-ui/icons/Search";
 import FullScreenDialog from "./newDocument";
 import SimpleMenu from "./DropDownMenu";
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,7 +73,7 @@ export default function SearchAppBar({ refreshTable }) {
   const classes = useStyles();
 
   var loggedOptionsCSS = {
-    display: "none",
+    // display: "none",
   };
 
   function onRefreshTable() {
@@ -94,7 +91,7 @@ export default function SearchAppBar({ refreshTable }) {
             color="inherit"
             aria-label="open drawer"
           >
-            {/* TODO Menuitem desplegable */}
+            {/* // DEADVID findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Transition */}
             <SimpleMenu></SimpleMenu>
           </IconButton>
           <div>
@@ -104,7 +101,7 @@ export default function SearchAppBar({ refreshTable }) {
           <Typography id="appName" className={classes.title} noWrap>
             FloPiDocs
           </Typography>
-          <h6 id="userName"></h6>
+          <h6 id="userName">{localStorage.getItem("userName")}</h6>
 
           <div className={classes.search}>
             <div className={classes.searchIcon}>
