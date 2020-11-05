@@ -1,8 +1,9 @@
 const Dictionary = {
-    newDocument : 'Nuevo FloPiDocumento',
-    title : 'Título',
-    purpose : 'Purpose',
+    newDocument : 'New FloπDoc',
+    title : 'Title *',
+    purpose : 'Purpose *',
     description : 'Content',
+    appName:'FloπDox',
 }
 
 export default Dictionary;

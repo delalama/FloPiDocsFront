@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import getEndPoint from "./Endpoints";
+import { Event } from '@material-ui/icons';
 
 function useDocuments() {
   const [searching, setSearching] = useState(false);
@@ -7,7 +8,6 @@ function useDocuments() {
 
   const query =
     getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
-
 
   function fetchDocuments() {
     setSearching(true);
@@ -19,12 +19,27 @@ function useDocuments() {
 
   useEffect(() => {
     fetchDocuments();
-  }, []);
+  },[]);
 
   function refresh() {
-    setTimeout(function(){ fetchDocuments(); }, 500);
+    setTimeout(fetchDocuments, 500);
   }
 
-  return { documents, searching, refresh };
+  function getDocumentsByText(text){
+    var text = document.getElementById('searchBar').value;
+    console.log(text);
+
+    if(text.length > 0){
+      // TODO implementar aquí la búsqueda de docs!!
+      console.log('buscando');
+    }
+    
+      // console.log(event.target);
+  }
+
+  function clear() {
+    setDocuments([]);
+  }
+  return { documents, searching, refresh, clear, getDocumentsByText };
 }
 export default useDocuments;

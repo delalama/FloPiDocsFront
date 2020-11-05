@@ -1,4 +1,4 @@
-import  { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import getEndPoint from "./Endpoints";
 
 function useDocumentFields(documentId) {
@@ -7,7 +7,7 @@ function useDocumentFields(documentId) {
 
   const query = getEndPoint("getFieldsByDocumentId") + documentId;
 
-  useEffect(() => {
+  function getFields() {
     setSearching(true);
     fetch(query)
       .then((response) => response.json())
@@ -16,8 +16,15 @@ function useDocumentFields(documentId) {
         console.log(response);
       })
       .finally(() => setSearching(false));
+  }
+
+  useEffect(() => {
+    getFields();
   }, []);
 
-  return { fields, searching };
+  function refresh() {
+    getFields();
+  }
+  return { fields, searching , refresh };
 }
 export default useDocumentFields;

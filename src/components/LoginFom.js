@@ -43,7 +43,7 @@ export default function LoginForm2({ onUserLogin }) {
 
   function resolveQuery(response) {
     console.log(response);
-    if (!response.userId == "") {
+    if (response.userId !== "") {
       var userId = response.userId;
 
       onUserLogin && onUserLogin(userId);
@@ -52,15 +52,17 @@ export default function LoginForm2({ onUserLogin }) {
       var firstName = response.firstName;
       // document.getElementById("userName").innerHTML = firstName;
       localStorage.setItem('userName',firstName);
+
+      // TODO desaparecer con buen código
       var login = document.getElementById("loginDiv");
       login.parentNode.removeChild(login);
 
-      // visualizar elementos once looged
-      var arrayOfElements = document.getElementsByClassName("loggedOptions");
-      var lengthOfArray = arrayOfElements.length;
-      for (var i = 0; i < lengthOfArray; i++) {
-        arrayOfElements[i].style.display = "flex";
-      }
+       // visualizar elementos once looged
+       var arrayOfElements = document.getElementsByClassName("loggedOptions");
+       var lengthOfArray = arrayOfElements.length;
+       for (var i = 0; i < lengthOfArray; i++) {
+         arrayOfElements[i].style.display = "flex";
+       }
     } else {
       document.getElementById("loginForm").reset();
     }

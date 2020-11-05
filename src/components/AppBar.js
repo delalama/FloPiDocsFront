@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext, useState, useEffect} from "react";
 import AppBar from "@material-ui/core/AppBar";
 import { MenuItem } from "@material-ui/core";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -10,6 +10,8 @@ import {createStyles,fade,Theme, makeStyles,
 import SearchIcon from "@material-ui/icons/Search";
 import FullScreenDialog from "./newDocument";
 import SimpleMenu from "./DropDownMenu";
+import {SearchContext} from "./../App";
+import Dictionary from "./StringsFloPi";
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -81,6 +83,13 @@ export default function SearchAppBar({ refreshTable }) {
     console.log("refreshing table event");
   }
 
+  const { search } = useContext(SearchContext);
+
+
+  function changeSearchText(event){
+    console.log('hola');
+    console.log(event);
+  }
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
@@ -99,7 +108,7 @@ export default function SearchAppBar({ refreshTable }) {
           </div>
 
           <Typography id="appName" className={classes.title} noWrap>
-            FloPiDocs
+            {Dictionary.appName}
           </Typography>
           <h6 id="userName">{localStorage.getItem("userName")}</h6>
 
@@ -108,12 +117,14 @@ export default function SearchAppBar({ refreshTable }) {
               <SearchIcon />
             </div>
             <InputBase
+              id='searchBar'
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
+              onChange={search}
             />
           </div>
         </Toolbar>

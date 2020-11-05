@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext,createContext } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
@@ -16,6 +16,9 @@ import useDocumentFields from "../request/useDocumentFields";
 import TablePaginationDemo from "./TablePagination";
 import DeleteDialogs from "./deleteDialog";
 import EditDialogs from "./editDialog";
+import TableCheckboxLabels from "./tableCheckbox";
+import useCheckArray from './useCheckArray';
+import {DocumentsContext} from './../App';
 
 const useRowStyles = makeStyles({
   root: {
@@ -46,7 +49,13 @@ function createField(id, fieldName, fieldValue) {
     fieldValue,
   };
 }
+const checkedDocumentsArray = [];
 
+function pushCheckedDocument(props){
+  const found = checkedDocumentsArray.find(element => element===props.row.id);
+  checkedDocumentsArray.push(props.row.id);
+  console.log(checkedDocumentsArray);
+}
 //TODO Row es document
 //TODO Crear función field, exporta la subtabla field
 //TODO Separar las entidades
@@ -55,8 +64,11 @@ function Row(props) {
   const [open, setOpen] = React.useState(false);
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const classes = useRowStyles();
-  var documentId = "";
 
+  const {checkedArray, setCheckedArray, addCheckedId} = useCheckArray();
+
+
+  
   return (
     <React.Fragment>
       <TableRow>
@@ -71,8 +83,11 @@ function Row(props) {
       </TableRow>
       <TableRow className={classes.root}>
         <TableCell>
+          <TableCheckboxLabels id={row.id} addCheckId={() => pushCheckedDocument(props)}> </TableCheckboxLabels>
+        </TableCell>
+        <TableCell>
           <IconButton
-            id={row.id}
+            iconid={row.id}
             aria-label="expand row"
             size="small"
             onClick={() => {
@@ -110,11 +125,18 @@ Row.propTypes = {
   }).isRequired,
 };
 
-export default function CollapsibleTable({ documents, searching }) {
+export default function CollapsibleTable({ searching }) {
+  const { documents } = useContext(DocumentsContext);
+
   const { refreshTableState, setRefresh } = useState(false);
   useEffect(() => {
     console.log(`You clicked ${refreshTableState} times`);
   });
+
+  // JOANILLO , código que se ejecutará cuando cambie [documents]
+  // useEffect(() => {
+  //   console.log(`You clicked ${refreshTableState} times`);
+  // },[documents]);
 
   let tableStyle = {
     marginTop: "3em",
@@ -125,6 +147,7 @@ export default function CollapsibleTable({ documents, searching }) {
       <Table aria-label="collapsible table">
         <TableHead>
           <TableRow>
+            <TableCell id="selectColumn"></TableCell>
             <TableCell></TableCell>
             <TableCell>Title </TableCell>
             <TableCell>Purpose</TableCell>
@@ -140,30 +163,35 @@ export default function CollapsibleTable({ documents, searching }) {
                 createData(id, title, purpose, content, date)
               )
               .map((row, index) => (
-                <Row key={row.id} row={row} />
+                  <Row key={row.id} row={row} />
               ))}
           </TableBody>
         )}
       </Table>
       <TablePaginationDemo></TablePaginationDemo>
     </TableContainer>
-  );
+    );
 }
 
-function Field({ documentId }) {
-  const { fields, searching } = useDocumentFields(documentId);
+export const FieldsContext = createContext({
+  refresh: () => {},
+});
 
+
+function Field({ documentId }) {
+  const { fields, searching,refresh } = useDocumentFields(documentId);
+
+  
   let tableStyle = {
     marginTop: "3em",
   };
+
   const classes = useRowStyles();
 
   const fieldStyle = {
     color: "green",
   };
 
-
-  function showDeleteDialog() {}
 
   console.log(documentId);
   return (
@@ -178,22 +206,28 @@ function Field({ documentId }) {
             <TableCell> </TableCell>
             <TableCell style={fieldStyle}> {field.fieldName}</TableCell>
             <TableCell style={fieldStyle}> {field.fieldValue}</TableCell>
+           
+            <FieldsContext.Provider
+            value={{
+              refresh,
+            }}
+          >
             <TableCell>
-              {" "}
-              {/* <Button variant="contained" color="primary" fieldId={field.id}>
-                EDIT
-              </Button>
+              <EditDialogs
+                fieldId={field.id}
+                fieldName={field.fieldName}
+                fieldValue={field.fieldValue}
+              ></EditDialogs>
             </TableCell>
             <TableCell>
-              {" "}
-              <Button variant="contained" color="secondary" fieldId={field.id}>
-                DELETE
-              </Button> */}
-              <EditDialogs fieldId={field.id} fieldName={field.fieldName} fieldValue={field.fieldValue}></EditDialogs>
+              <DeleteDialogs
+                fieldId={field.id}
+                fieldName={field.fieldName}
+                fieldValueuseContext={field.fieldValue}
+              ></DeleteDialogs>
             </TableCell>
-            <TableCell>
-              <DeleteDialogs fieldId={field.id} fieldName={field.fieldName} fieldValue={field.fieldValue}></DeleteDialogs>
-            </TableCell>
+          </FieldsContext.Provider>
+           
           </TableRow>
         ))}
     </React.Fragment>

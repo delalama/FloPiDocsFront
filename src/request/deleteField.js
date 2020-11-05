@@ -3,6 +3,7 @@ import getEndpoint from './Endpoints';
 export default function deleteField(fieldId){
 
     const query = getEndpoint('deleteField') + fieldId;
+
     
     const requestOptions = {
         method: "POST",

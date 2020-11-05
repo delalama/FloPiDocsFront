@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -15,6 +15,7 @@ import Slide from "@material-ui/core/Slide";
 import StringsFloPi from "./StringsFloPi";
 import TextField from "@material-ui/core/TextField";
 import SaveDocuments from "../request/useSaveDocuments";
+import CheckIcon from '@material-ui/icons/Check';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -39,7 +40,7 @@ export default function FullScreenDialog({refreshTable}) {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleCloseOnSave = () => {
     const title = document.getElementById('newDocTitle').value;
     const purpose = document.getElementById('newDocPurpose').value;
     const content = document.getElementById('newDocContent').value;
@@ -49,9 +50,34 @@ export default function FullScreenDialog({refreshTable}) {
     setOpen(false);
   };
 
+  const handleCloseWithoutSave = () => {
+    setOpen(false);
+  };
+
   const dateFormStyle = {
     'justify-content' : 'center',
   }
+
+  const [titleIconDisplay, setTitleIconDisplay] = useState(false);
+
+  function onChangeTitle(event){
+    var value = event.target.value;
+    if(value.length > 0) { 
+      setTitleIconDisplay(true);
+    } else {
+      setTitleIconDisplay(false);
+    }
+  }
+
+  const [purposeIconDisplay, setPurposeIconDisplay] = useState(false);
+
+  function onChangePurpose(event){
+    var value = event.target.value;
+    if( value.length > 0 ) {
+      setPurposeIconDisplay(true);
+    } else setPurposeIconDisplay(false);
+  }
+
 
   return (
     <div>
@@ -61,7 +87,7 @@ export default function FullScreenDialog({refreshTable}) {
       <Dialog
         fullScreen
         open={open}
-        onClose={handleClose}
+        onClose={handleCloseWithoutSave}
         TransitionComponent={Transition}
       >
         <AppBar className={classes.appBar}>
@@ -69,7 +95,7 @@ export default function FullScreenDialog({refreshTable}) {
             <IconButton
               edge="start"
               color="inherit"
-              onClick={handleClose}
+              onClick={handleCloseWithoutSave}
               aria-label="close"
             >
               <CloseIcon />
@@ -77,7 +103,7 @@ export default function FullScreenDialog({refreshTable}) {
             <Typography variant="h6" className={classes.title}>
               {StringsFloPi.newDocument}
             </Typography>
-            <Button autoFocus color="inherit" onClick={handleClose}>
+            <Button id='saveButton' autoFocus color="inherit" onClick={handleCloseOnSave} disabled={!titleIconDisplay || !purposeIconDisplay}>
               SAVE
             </Button>
           </Toolbar>
@@ -85,11 +111,13 @@ export default function FullScreenDialog({refreshTable}) {
         <List>
           <form className={classes.root} noValidate autoComplete="off">
             <ListItem style={dateFormStyle}>
-            <TextField id="newDocTitle" label={StringsFloPi.title} />
+            <TextField id="newDocTitle" label={StringsFloPi.title} onChange={onChangeTitle}/>
+            {titleIconDisplay && <CheckIcon></CheckIcon>}
           </ListItem>
 
             <ListItem style={dateFormStyle}>
-            <TextField id="newDocPurpose" label={StringsFloPi.purpose} />
+            <TextField id="newDocPurpose" label={StringsFloPi.purpose} onChange={onChangePurpose}/>
+            {purposeIconDisplay && <CheckIcon></CheckIcon>}
           </ListItem>
 
             <ListItem  style={dateFormStyle}>

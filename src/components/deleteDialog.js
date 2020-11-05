@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,6 +9,9 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import deleteField from './../request/deleteField';
+import {DocumentsContext} from './../App';
+import {FieldsContext} from './DocumentsTable';
+
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -57,8 +60,11 @@ const deleteButtonStyle = {
 
 
 export default function DeleteDialogs(props) {
+  const { refresh } = useContext(FieldsContext);
+
   const [open, setOpen] = React.useState(false);
   const [safeDeleteOption, setSafeDeleteOption] = useState();
+
 
   const fieldId=props.fieldId;
 
@@ -69,14 +75,20 @@ export default function DeleteDialogs(props) {
     
     if(safeDeleteActive){
       setOpen(true);
-    }else{deleteField(fieldId);}
-  };
-  const handleClose = () => {
-      console.log('vamos a borrar el field con id ' + fieldId);
+    }else{
       deleteField(fieldId);
-    setOpen(false);
+      setTimeout( () =>{ refresh(); }, 300);
+    }
+  };
+  
+  const handleClose = () => {
+      deleteField(fieldId);
+      setTimeout( () =>{ refresh(); }, 300);
+      setOpen(false);
   };
 
+  //TODO JOAN, añadir aquí mediante REDUX un cambio de estado que se propague hasta getFields, 
+  // de modo que cuando borre un field se recarguen los fields!!
 
   return (
     <div>
