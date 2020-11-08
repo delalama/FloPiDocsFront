@@ -1,4 +1,4 @@
-import getEndPoint from "./Endpoints"
+import getEndPoint from "../utilities/Endpoints"
 
 export default function changeOptions(safeDelete){
 

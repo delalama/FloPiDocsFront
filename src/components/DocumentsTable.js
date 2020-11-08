@@ -19,6 +19,7 @@ import EditDialogs from "./editDialog";
 import TableCheckboxLabels from "./tableCheckbox";
 import useCheckArray from './useCheckArray';
 import {DocumentsContext} from './../App';
+import CircularIndeterminate from "./CircularIndeterminate";
 
 const useRowStyles = makeStyles({
   root: {
@@ -28,7 +29,7 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(id, title, purpose, content, date, protein, price) {
+function createData(id, title, purpose, content, date) {
   return {
     id,
     title,
@@ -38,10 +39,6 @@ function createData(id, title, purpose, content, date, protein, price) {
   };
 }
 
-function getFieldsById(id) {
-  console.log("getFields!!" + id);
-}
-
 function createField(id, fieldName, fieldValue) {
   return {
     id,
@@ -49,6 +46,8 @@ function createField(id, fieldName, fieldValue) {
     fieldValue,
   };
 }
+
+// TODO SELECCIÓN DE DOCUMENTOS PARA MOSTRAR OPCIONES DE EXPORTACIÓN
 const checkedDocumentsArray = [];
 
 function pushCheckedDocument(props){
@@ -56,9 +55,8 @@ function pushCheckedDocument(props){
   checkedDocumentsArray.push(props.row.id);
   console.log(checkedDocumentsArray);
 }
+
 //TODO Row es document
-//TODO Crear función field, exporta la subtabla field
-//TODO Separar las entidades
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = React.useState(false);
@@ -67,8 +65,6 @@ function Row(props) {
 
   const {checkedArray, setCheckedArray, addCheckedId} = useCheckArray();
 
-
-  
   return (
     <React.Fragment>
       <TableRow>
@@ -133,11 +129,6 @@ export default function CollapsibleTable({ searching }) {
     console.log(`You clicked ${refreshTableState} times`);
   });
 
-  // JOANILLO , código que se ejecutará cuando cambie [documents]
-  // useEffect(() => {
-  //   console.log(`You clicked ${refreshTableState} times`);
-  // },[documents]);
-
   let tableStyle = {
     marginTop: "3em",
   };
@@ -157,7 +148,7 @@ export default function CollapsibleTable({ searching }) {
         </TableHead>
         {!refreshTableState && (
           <TableBody>
-            {searching && "searching..."}
+            {searching && <CircularIndeterminate></CircularIndeterminate>}
             {documents
               ?.map(({ id, title, purpose, content, date }) =>
                 createData(id, title, purpose, content, date)
@@ -177,10 +168,8 @@ export const FieldsContext = createContext({
   refresh: () => {},
 });
 
-
 function Field({ documentId }) {
   const { fields, searching,refresh } = useDocumentFields(documentId);
-
   
   let tableStyle = {
     marginTop: "3em",
@@ -192,11 +181,10 @@ function Field({ documentId }) {
     color: "green",
   };
 
-
   console.log(documentId);
   return (
     <React.Fragment>
-      {/* {searching && "searching..."} */}
+      {searching && <CircularIndeterminate></CircularIndeterminate>}
       {fields
         ?.map(({ id, fieldName, fieldValue }) =>
           createField(id, fieldName, fieldValue)

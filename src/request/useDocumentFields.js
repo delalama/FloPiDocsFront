@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getEndPoint from "./Endpoints";
+import getEndPoint from "../utilities/Endpoints";
 
 function useDocumentFields(documentId) {
   const [searching, setSearching] = useState(false);

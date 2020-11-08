@@ -2,9 +2,10 @@
 export default function getEndPoint(value) {
     var host = 'http://localhost:8080';
     var endpoint;
+    // eslint-disable-next-line default-case
     switch(value) {
         case "login": 
-            endpoint = '/user/login'; 
+            endpoint = '/users/login'; 
             break;
         case "getAllDocumentsByUserId": 
             endpoint = '/document/getAllDocumentsByUserId?userId=';
@@ -22,6 +23,10 @@ export default function getEndPoint(value) {
             endpoint = '/accountOptions/changeSafeDelete?userId='; break;
         case "deleteField": 
             endpoint = '/field/deleteFieldById?fieldId='; break;
+        case "newUser": 
+            endpoint = '/users/'; break;
+        case "emailAlreadyExists": 
+            endpoint = '/users/emailAlreadyExists'; break;
     }
     return host + endpoint; 
 }

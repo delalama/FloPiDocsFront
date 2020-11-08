@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import getEndPoint from "./Endpoints";
-import { Event } from '@material-ui/icons';
+import getEndPoint from "../utilities/Endpoints";
 
 function useDocuments() {
   const [searching, setSearching] = useState(false);
@@ -30,6 +29,8 @@ function useDocuments() {
     console.log(text);
 
     if(text.length > 0){
+      
+      var userId = localStorage.getItem('userId');
       // TODO implementar aquí la búsqueda de docs!!
       console.log('buscando');
     }

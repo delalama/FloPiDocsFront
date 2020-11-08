@@ -1,8 +1,12 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, createContext, useCallback, useEffect } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import useFetch, { Provider } from "use-http";
+import getEndPoint from "../utilities/Endpoints";
+import NewUserForm from "./newUserForm";
+import isBirel from '../utilities/isBirel';
+import Divider from "@material-ui/core/Divider";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -14,6 +18,9 @@ const useStyles = makeStyles((theme) =>
     },
   })
 );
+export var LoginFormContext = createContext({
+  toogleForm: () => {},
+});
 
 export default function LoginForm2({ onUserLogin }) {
   const classes = useStyles();
@@ -21,11 +28,9 @@ export default function LoginForm2({ onUserLogin }) {
     email: "",
     password: "",
   };
-  
+
   function setEmail(email) {
-    var isBirel = Boolean(email.substring(0, 4).toLowerCase() === "bire");
-    const message = document.getElementById("message");
-    isBirel ? (message.innerHTML = "Pues cuelga") : (message.innerHTML = "");
+    isBirel(email);
     values.email = email;
   }
 
@@ -41,28 +46,28 @@ export default function LoginForm2({ onUserLogin }) {
     color: "White",
   };
 
+  // TODO se sigue manteniendo el userId en localStorage la primera vez que se crea el usuario y loguea
   function resolveQuery(response) {
     console.log(response);
-    if (response.userId !== "") {
-      var userId = response.userId;
-
+    var userId = response.userId;
+    if (userId !== "" && userId !== undefined) {
       onUserLogin && onUserLogin(userId);
 
       localStorage.setItem("userId", userId);
       var firstName = response.firstName;
       // document.getElementById("userName").innerHTML = firstName;
-      localStorage.setItem('userName',firstName);
+      localStorage.setItem("userName", firstName);
 
       // TODO desaparecer con buen código
       var login = document.getElementById("loginDiv");
       login.parentNode.removeChild(login);
 
-       // visualizar elementos once looged
-       var arrayOfElements = document.getElementsByClassName("loggedOptions");
-       var lengthOfArray = arrayOfElements.length;
-       for (var i = 0; i < lengthOfArray; i++) {
-         arrayOfElements[i].style.display = "flex";
-       }
+      // visualizar elementos once looged
+      var arrayOfElements = document.getElementsByClassName("loggedOptions");
+      var lengthOfArray = arrayOfElements.length;
+      for (var i = 0; i < lengthOfArray; i++) {
+        arrayOfElements[i].style.display = "flex";
+      }
     } else {
       document.getElementById("loginForm").reset();
     }
@@ -70,15 +75,18 @@ export default function LoginForm2({ onUserLogin }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (values.email != 0 && values.password != 0) {
-      const server = "http://localhost:8080";
-      const endoint = "/user/login";
-      const params = "?email=" + values.email + "&password=" + values.password;
+    if (values.email !== "" && values.password !== "") {
+      const query = getEndPoint("login");
 
-      const query = server + endoint + params;
+      const email = values.email;
+      const password = values.password;
 
       fetch(query, {
-        method: "GET",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       })
         .then(function (response) {
           return response.json();
@@ -92,41 +100,20 @@ export default function LoginForm2({ onUserLogin }) {
     }
   }
 
-  const HandleSubmitUseFetch = () => {
-    const [userId, setUserId] = useState("");
-    const [user, setUser] = useState([]);
-    const { get, post, response, loading, error } = useFetch({ data: [] });
 
-    const values = {
-      email: "elaltas@gmail.com",
-      password: "pass",
-    };
-    const server = "http://localhost:8080";
-    const endoint = "/user/login";
-    const params = "?email=" + values.email + "&password=" + values.password;
+  const [toogleFormsDisplay, setToogleFormsDisplay] = useState(true);
 
-    const loadUser = useCallback(async () => {
-      if (!userId) return;
-
-      const initialUser = await get(params);
-      if (response.ok) {
-        setUser(loadUser);
-        console.log(response);
-      }
-    }, [get, response]);
-
-    useEffect(() => {
-      loadUser();
-    }, [loadUser]);
+  const toogleForm = () => {
+    setToogleFormsDisplay(!toogleFormsDisplay);
   };
-
-  function printHola() {
-    console.log("hola");
-    // alert("submitting");
-  }
 
   return (
     <div id="loginDiv">
+      <LoginFormContext.Provider
+        value={{
+          toogleForm,
+        }}
+      >
       <div>
         <h1 style={{ color: "red", fontSize: "4em" }}>FloπDox</h1>
       </div>
@@ -134,33 +121,47 @@ export default function LoginForm2({ onUserLogin }) {
       <div style={messageStyle}>
         <h1 id="message"></h1>
       </div>
-      <form id="loginForm" onSubmit={handleSubmit}>
-        <div>
-          <TextField
-            required
-            id="email"
-            label="email"
+      {toogleFormsDisplay && (
+        <form id="loginForm" onSubmit={handleSubmit}>
+          <div>
+            <TextField
+              required
+              id="email"
+              label="email"
+              color="primary"
+              onChange={(event) => setEmail(event.target.value)}
+            />
+            <TextField
+              required
+              type="password"
+              id="password"
+              label="password"
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+          <Button
+            style={sendButtonStyle}
             color="primary"
-            onChange={(event) => setEmail(event.target.value)}
-          />
-          <TextField
-            required
-            type="password"
-            id="password"
-            label="password"
-            onChange={(event) => setPassword(event.target.value)}
-          />
-        </div>
-        <Button
-          style={sendButtonStyle}
-          color="primary"
-          className={classes.button}
-          type="submit"
-          value="submit"
-        >
-          Send
-        </Button>
-      </form>
+            className={classes.button}
+            type="submit"
+            value="submit"
+          >
+            Send
+          </Button>
+          <Divider orientation="vertical" />
+          <Button
+            style={sendButtonStyle}
+            color="primary"
+            className={classes.button}
+            onClick={() => toogleForm()}
+          >
+            NEW USER
+          </Button>
+        </form>
+      )}
+      {!toogleFormsDisplay && <NewUserForm ></NewUserForm>}
+      </LoginFormContext.Provider>
+
     </div>
   );
 }

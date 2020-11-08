@@ -4,6 +4,10 @@ const Dictionary = {
     purpose : 'Purpose *',
     description : 'Content',
     appName:'FloπDox',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    password: 'Password',
+    email: 'Email',
 }
 
 export default Dictionary;

@@ -1,4 +1,4 @@
-import getEndPoint from "./Endpoints";
+import getEndPoint from "../utilities/Endpoints";
 
 //DEADVID -> HACERLO CON useEffect.........desde donde llamaría useSaveDocuments?
 function SaveDocuments(title, purpose, content) {

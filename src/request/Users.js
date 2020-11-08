@@ -1,5 +1,5 @@
 import User from './../request/Users.js'
-import getEndpoint from './../request/Endpoints';
+import getEndpoint from '../utilities/Endpoints';
 
 export default function useUsers() {
     const [searching , setSearching] = useState(false);

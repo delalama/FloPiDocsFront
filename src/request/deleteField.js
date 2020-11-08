@@ -1,4 +1,4 @@
-import getEndpoint from './Endpoints';
+import getEndpoint from '../utilities/Endpoints';
 
 export default function deleteField(fieldId){
 
