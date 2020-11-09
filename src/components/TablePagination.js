@@ -17,8 +17,13 @@ function TablePaginationDemo() {
     setPage(0);
   };
 
+  const paginatorStyle = {
+    "background-color" : 'aquamarine',
+  }
+
   return (
     <TablePagination
+      style={paginatorStyle}
       component="div"
     //   count={100}
       count={100}

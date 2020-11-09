@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext,createContext } from "react";
+import React, { useState, useEffect, useContext, createContext } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Collapse from "@material-ui/core/Collapse";
@@ -17,9 +17,12 @@ import TablePaginationDemo from "./TablePagination";
 import DeleteDialogs from "./deleteDialog";
 import EditDialogs from "./editDialog";
 import TableCheckboxLabels from "./tableCheckbox";
-import useCheckArray from './useCheckArray';
-import {DocumentsContext} from './../App';
+import useCheckArray from "./useCheckArray";
+import { DocumentsContext } from "./../App";
 import CircularIndeterminate from "./CircularIndeterminate";
+import AddTooltip from "./ToolTip";
+import FullScreenFieldsCreator from "./FullScreenFieldsCreator";
+
 
 const useRowStyles = makeStyles({
   root: {
@@ -50,8 +53,10 @@ function createField(id, fieldName, fieldValue) {
 // TODO SELECCIÓN DE DOCUMENTOS PARA MOSTRAR OPCIONES DE EXPORTACIÓN
 const checkedDocumentsArray = [];
 
-function pushCheckedDocument(props){
-  const found = checkedDocumentsArray.find(element => element===props.row.id);
+function pushCheckedDocument(props) {
+  const found = checkedDocumentsArray.find(
+    (element) => element === props.row.id
+  );
   checkedDocumentsArray.push(props.row.id);
   console.log(checkedDocumentsArray);
 }
@@ -63,7 +68,15 @@ function Row(props) {
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const classes = useRowStyles();
 
-  const {checkedArray, setCheckedArray, addCheckedId} = useCheckArray();
+  const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
+
+  const rowValuesStyle = {
+    "text-align": "center",
+  };
+ function onRefreshTable() {
+
+    console.log("refreshing table event" + row.id);
+  }
 
   return (
     <React.Fragment>
@@ -79,7 +92,12 @@ function Row(props) {
       </TableRow>
       <TableRow className={classes.root}>
         <TableCell>
-          <TableCheckboxLabels id={row.id} addCheckId={() => pushCheckedDocument(props)}> </TableCheckboxLabels>
+          <TableCheckboxLabels
+            id={row.id}
+            addCheckId={() => pushCheckedDocument(props)}
+          >
+            {" "}
+          </TableCheckboxLabels>
         </TableCell>
         <TableCell>
           <IconButton
@@ -90,18 +108,31 @@ function Row(props) {
               setOpen(!open);
               setSelectedDocumentId(row.id);
             }}
-            // onClick={() => setOpen(!open)}
+            /*  TODO
+            MozUserSelect: "none"
+WebkitUserSelect: "none"
+msUserSelect: "none" */
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell component="th" scope="row">
+        <TableCell 
+        style={rowValuesStyle} 
+        component="th" scope="row">
           {row.title}
         </TableCell>
-        <TableCell maxLength="12">{row.purpose}</TableCell>
-        <TableCell maxLength="10">{row.content}</TableCell>
-        <TableCell>{row.date}</TableCell>
+        <TableCell style={rowValuesStyle} maxLength="12">{row.purpose}</TableCell>
+        <TableCell style={rowValuesStyle} maxLength="10">{row.content}</TableCell>
+        <TableCell
+        style={rowValuesStyle} 
+        >
+          {row.date}
+          </TableCell>
+        <TableCell>
+        <FullScreenFieldsCreator documentId={row.id} refreshTable={onRefreshTable}></FullScreenFieldsCreator>
+        </TableCell>
       </TableRow>
+      {/* //DEADVID , cómo añadir aquí un contenedor para los fields?, es para dar formato */}
       {selectedDocumentId && open && <Field documentId={selectedDocumentId} />}
     </React.Fragment>
   );
@@ -122,46 +153,65 @@ Row.propTypes = {
 };
 
 export default function CollapsibleTable({ searching }) {
-  const { documents } = useContext(DocumentsContext);
+  const { documents, refresh, searchingDocuments } = useContext(
+    DocumentsContext
+  );
 
   const { refreshTableState, setRefresh } = useState(false);
+
   useEffect(() => {
-    console.log(`You clicked ${refreshTableState} times`);
-  });
+    refresh();
+  }, [refreshTableState]);
 
   let tableStyle = {
-    marginTop: "3em",
+    "margin-top": "4em",
+  };
+
+  const tableHeadStyle = {
+    background: "darkseagreen",
+  };
+
+  const tableBodyStyle = {
+    "background-color": "wheat",
+  };
+
+  const upperTitleColumnNameStyle = {
+    "text-align": "center",
+    "font-weight": "bold",
   };
 
   return (
-    <TableContainer style={tableStyle} component={Paper} id="documentsTable">
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell id="selectColumn"></TableCell>
-            <TableCell></TableCell>
-            <TableCell>Title </TableCell>
-            <TableCell>Purpose</TableCell>
-            <TableCell>Content</TableCell>
-            <TableCell>Date</TableCell>
-          </TableRow>
-        </TableHead>
-        {!refreshTableState && (
-          <TableBody>
-            {searching && <CircularIndeterminate></CircularIndeterminate>}
-            {documents
-              ?.map(({ id, title, purpose, content, date }) =>
-                createData(id, title, purpose, content, date)
-              )
-              .map((row, index) => (
+    <div>
+      {searchingDocuments && <CircularIndeterminate></CircularIndeterminate>}
+      <TableContainer style={tableStyle} component={Paper} id="documentsTable">
+        <Table aria-label="collapsible table">
+          <TableHead style={tableHeadStyle}>
+            <TableRow>
+              <TableCell id="selectColumn"></TableCell>
+              <TableCell></TableCell>
+              <TableCell style={upperTitleColumnNameStyle}>Title </TableCell>
+              <TableCell style={upperTitleColumnNameStyle}>Purpose</TableCell>
+              <TableCell style={upperTitleColumnNameStyle}>Content</TableCell>
+              <TableCell style={upperTitleColumnNameStyle}>Date</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          {!refreshTableState && (
+            <TableBody style={tableBodyStyle}>
+              {documents
+                ?.map(({ id, title, purpose, content, date }) =>
+                  createData(id, title, purpose, content, date)
+                )
+                .map((row, index) => (
                   <Row key={row.id} row={row} />
-              ))}
-          </TableBody>
-        )}
-      </Table>
-      <TablePaginationDemo></TablePaginationDemo>
-    </TableContainer>
-    );
+                ))}
+            </TableBody>
+          )}
+        </Table>
+        <TablePaginationDemo></TablePaginationDemo>
+      </TableContainer>
+    </div>
+  );
 }
 
 export const FieldsContext = createContext({
@@ -169,8 +219,8 @@ export const FieldsContext = createContext({
 });
 
 function Field({ documentId }) {
-  const { fields, searching,refresh } = useDocumentFields(documentId);
-  
+  const { fields, searching, refresh } = useDocumentFields(documentId);
+
   let tableStyle = {
     marginTop: "3em",
   };
@@ -181,7 +231,6 @@ function Field({ documentId }) {
     color: "green",
   };
 
-  console.log(documentId);
   return (
     <React.Fragment>
       {searching && <CircularIndeterminate></CircularIndeterminate>}
@@ -192,30 +241,35 @@ function Field({ documentId }) {
         .map((field, index) => (
           <TableRow key={field.id} className={classes.root}>
             <TableCell> </TableCell>
-            <TableCell style={fieldStyle}> {field.fieldName}</TableCell>
-            <TableCell style={fieldStyle}> {field.fieldValue}</TableCell>
-           
+            <TableCell colSpan="2" style={fieldStyle}>
+              {" "}
+              {field.fieldName}
+            </TableCell>
+            <TableCell colSpan="2" style={fieldStyle}>
+              {" "}
+              {field.fieldValue}
+            </TableCell>
+
             <FieldsContext.Provider
-            value={{
-              refresh,
-            }}
-          >
-            <TableCell>
-              <EditDialogs
-                fieldId={field.id}
-                fieldName={field.fieldName}
-                fieldValue={field.fieldValue}
-              ></EditDialogs>
-            </TableCell>
-            <TableCell>
-              <DeleteDialogs
-                fieldId={field.id}
-                fieldName={field.fieldName}
-                fieldValueuseContext={field.fieldValue}
-              ></DeleteDialogs>
-            </TableCell>
-          </FieldsContext.Provider>
-           
+              value={{
+                refresh,
+              }}
+            >
+              <TableCell>
+                <EditDialogs
+                  fieldId={field.id}
+                  fieldName={field.fieldName}
+                  fieldValue={field.fieldValue}
+                ></EditDialogs>
+              </TableCell>
+              <TableCell>
+                <DeleteDialogs
+                  fieldId={field.id}
+                  fieldName={field.fieldName}
+                  fieldValueuseContext={field.fieldValue}
+                ></DeleteDialogs>
+              </TableCell>
+            </FieldsContext.Provider>
           </TableRow>
         ))}
     </React.Fragment>

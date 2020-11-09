@@ -5,8 +5,10 @@ import Button from "@material-ui/core/Button";
 import useFetch, { Provider } from "use-http";
 import getEndPoint from "../utilities/Endpoints";
 import NewUserForm from "./newUserForm";
-import isBirel from '../utilities/isBirel';
+import isBirel from "../utilities/isBirel";
+import Dictionary from "./StringsFloPi";
 import Divider from "@material-ui/core/Divider";
+import Image from "material-ui-image";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -46,28 +48,27 @@ export default function LoginForm2({ onUserLogin }) {
     color: "White",
   };
 
+  function setClose(userId) {
+    onUserLogin && onUserLogin(userId);
+  }
   // TODO se sigue manteniendo el userId en localStorage la primera vez que se crea el usuario y loguea
   function resolveQuery(response) {
     console.log(response);
     var userId = response.userId;
     if (userId !== "" && userId !== undefined) {
-      onUserLogin && onUserLogin(userId);
-
       localStorage.setItem("userId", userId);
       var firstName = response.firstName;
-      // document.getElementById("userName").innerHTML = firstName;
       localStorage.setItem("userName", firstName);
 
-      // TODO desaparecer con buen código
-      var login = document.getElementById("loginDiv");
-      login.parentNode.removeChild(login);
+      // setTimeout( setClose, 500 );
+      setClose();
 
-      // visualizar elementos once looged
-      var arrayOfElements = document.getElementsByClassName("loggedOptions");
-      var lengthOfArray = arrayOfElements.length;
-      for (var i = 0; i < lengthOfArray; i++) {
-        arrayOfElements[i].style.display = "flex";
-      }
+      // // // // visualizar elementos once looged
+      // var arrayOfElements = document.getElementsByClassName("loggedOptions");
+      // var lengthOfArray = arrayOfElements.length;
+      // for (var i = 0; i < lengthOfArray; i++) {
+      //   arrayOfElements[i].style.display = "flex";
+      // }
     } else {
       document.getElementById("loginForm").reset();
     }
@@ -100,7 +101,6 @@ export default function LoginForm2({ onUserLogin }) {
     }
   }
 
-
   const [toogleFormsDisplay, setToogleFormsDisplay] = useState(true);
 
   const toogleForm = () => {
@@ -114,54 +114,57 @@ export default function LoginForm2({ onUserLogin }) {
           toogleForm,
         }}
       >
-      <div>
-        <h1 style={{ color: "red", fontSize: "4em" }}>FloπDox</h1>
-      </div>
+        {/* <div>
+        <h1 style={{ color: "red", fontSize: "4em" }}>{Dictionary.appName}</h1>
+      </div> */}
 
-      <div style={messageStyle}>
-        <h1 id="message"></h1>
-      </div>
-      {toogleFormsDisplay && (
-        <form id="loginForm" onSubmit={handleSubmit}>
-          <div>
-            <TextField
-              required
-              id="email"
-              label="email"
+        <div>
+          <Image src={require("./../images/5.png")} />
+        </div>
+
+        <div style={messageStyle}>
+          <h1 id="message"></h1>
+        </div>
+        {toogleFormsDisplay && (
+          <form id="loginForm" onSubmit={handleSubmit}>
+            <div>
+              <TextField
+                required
+                id="email"
+                label="email"
+                color="primary"
+                onChange={(event) => setEmail(event.target.value)}
+              />
+              <TextField
+                required
+                type="password"
+                id="password"
+                label="password"
+                onChange={(event) => setPassword(event.target.value)}
+              />
+            </div>
+            <Button
+              style={sendButtonStyle}
               color="primary"
-              onChange={(event) => setEmail(event.target.value)}
-            />
-            <TextField
-              required
-              type="password"
-              id="password"
-              label="password"
-              onChange={(event) => setPassword(event.target.value)}
-            />
-          </div>
-          <Button
-            style={sendButtonStyle}
-            color="primary"
-            className={classes.button}
-            type="submit"
-            value="submit"
-          >
-            Send
-          </Button>
-          <Divider orientation="vertical" />
-          <Button
-            style={sendButtonStyle}
-            color="primary"
-            className={classes.button}
-            onClick={() => toogleForm()}
-          >
-            NEW USER
-          </Button>
-        </form>
-      )}
-      {!toogleFormsDisplay && <NewUserForm ></NewUserForm>}
+              className={classes.button}
+              type="submit"
+              value="submit"
+            >
+              Send
+            </Button>
+            <Divider orientation="vertical" />
+            <Button
+              style={sendButtonStyle}
+              color="primary"
+              className={classes.button}
+              onClick={() => toogleForm()}
+            >
+              NEW USER
+            </Button>
+          </form>
+        )}
+        {!toogleFormsDisplay && <NewUserForm></NewUserForm>}
       </LoginFormContext.Provider>
-
     </div>
   );
 }

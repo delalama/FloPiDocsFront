@@ -9,6 +9,7 @@ export const DocumentsContext = createContext({
   documents: [],
   refresh: () => {},
   clear: () => {},
+  searchingDocuments: Boolean,
 });
 
 export const SearchContext = createContext({
@@ -19,19 +20,11 @@ function App() {
   const [showTable, setShowTable] = useState(false);
   const {
     documents,
-    searching,
+    searchingDocuments,
     refresh,
     clear,
     getDocumentsByText,
   } = useDocuments();
-
-  // useEffect(() => {
-  //   console.log(`searchUseefecct`);
-  // }, [search]);
-
-  // function search(Event){
-  //     console.log('search from app');
-  // }
 
   const search = () => {
     getDocumentsByText();
@@ -45,12 +38,12 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>
-         <SearchContext.Provider
+          <SearchContext.Provider
             value={{
               search,
             }}
           >
-           {showTable &&  <AppBar refreshTable={refresh} />}
+            {showTable && <AppBar refreshTable={refresh} />}
           </SearchContext.Provider>
 
           <DocumentsContext.Provider
@@ -60,11 +53,13 @@ function App() {
               clear,
             }}
           >
-            <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
+            {!showTable && (
+              <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
+            )}
 
             {showTable && (
               <>
-                <CollapsibleTable searching={searching} />
+                <CollapsibleTable searching={searchingDocuments} />
               </>
             )}
           </DocumentsContext.Provider>
@@ -75,3 +70,5 @@ function App() {
 }
 
 export default App;
+
+// TODO aprender userRef para sustituir todos los "getElementById"

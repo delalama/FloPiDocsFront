@@ -14,8 +14,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import StringsFloPi from "./StringsFloPi";
 import TextField from "@material-ui/core/TextField";
-import SaveDocuments from "../request/useSaveDocuments";
+import SaveFields from "../request/useSaveFields";
 import CheckIcon from '@material-ui/icons/Check';
+import AddTooltip from "./ToolTip";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -31,8 +32,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog({refreshTable}) {
+export default function FullScreenFieldsCreator({documentId, refreshTable}) {
  
+  const documentid = documentId;
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
@@ -41,11 +43,10 @@ export default function FullScreenDialog({refreshTable}) {
   };
 
   const handleCloseOnSave = () => {
-    const title = document.getElementById('newDocTitle').value;
-    const purpose = document.getElementById('newDocPurpose').value;
-    const content = document.getElementById('newDocContent').value;
+    const fieldName = document.getElementById('newFieldName').value;
+    const fieldValue = document.getElementById('newFieldValue').value;
 
-    SaveDocuments(title,purpose,content);
+    SaveFields(fieldName,fieldValue, documentid);
     setIconsInitValue();
     refreshTable && refreshTable(true);
     setOpen(false);
@@ -67,7 +68,7 @@ export default function FullScreenDialog({refreshTable}) {
 
   const [titleIconDisplay, setTitleIconDisplay] = useState(false);
 
-  function onChangeTitle(event){
+  function onChangeFieldName(event){
     var value = event.target.value;
     if(value.length > 0) { 
       setTitleIconDisplay(true);
@@ -79,7 +80,7 @@ export default function FullScreenDialog({refreshTable}) {
 
   const [purposeIconDisplay, setPurposeIconDisplay] = useState(false);
 
-  function onChangePurpose(event){
+  function onChangeFieldValue(event){
     var value = event.target.value;
     if( value.length > 0 ) {
       setPurposeIconDisplay(true);
@@ -90,9 +91,13 @@ export default function FullScreenDialog({refreshTable}) {
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
-        {StringsFloPi.newDocument}
+        {StringsFloPi.newField}
       </Button>
       
+{/*     DEADVID , se puede pasar este ONCLICK a este TOOLTIP??? 
+      <AddTooltip onClick={handleClickOpen}> 
+      </AddTooltip> 
+ */}
       <Dialog
         fullScreen
         open={open}
@@ -110,7 +115,10 @@ export default function FullScreenDialog({refreshTable}) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {StringsFloPi.newDocument}
+              {StringsFloPi.newField}
+            </Typography>
+            <Typography variant="h6" className={classes.title}>
+              {documentid}
             </Typography>
             <Button id='saveButton' autoFocus color="inherit" onClick={handleCloseOnSave} disabled={!titleIconDisplay || !purposeIconDisplay}>
               SAVE
@@ -120,19 +128,15 @@ export default function FullScreenDialog({refreshTable}) {
         <List>
           <form className={classes.root} noValidate autoComplete="off">
             <ListItem style={dateFormStyle}>
-            <TextField id="newDocTitle" label={StringsFloPi.title} onChange={onChangeTitle}/>
+            <TextField id="newFieldName" label={StringsFloPi.fieldName} onChange={onChangeFieldName}/>
             {titleIconDisplay && <CheckIcon></CheckIcon>}
           </ListItem>
 
             <ListItem style={dateFormStyle}>
-            <TextField id="newDocPurpose" label={StringsFloPi.purpose} onChange={onChangePurpose}/>
+            <TextField id="newFieldValue" label={StringsFloPi.fieldValue} onChange={onChangeFieldValue}/>
             {purposeIconDisplay && <CheckIcon></CheckIcon>}
           </ListItem>
 
-            <ListItem  style={dateFormStyle}>
-            <TextField id="newDocContent" label={StringsFloPi.description} />
-          </ListItem>
-            
           </form>
         </List>
       </Dialog>
