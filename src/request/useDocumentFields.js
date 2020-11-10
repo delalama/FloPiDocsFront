@@ -22,9 +22,9 @@ function useDocumentFields(documentId) {
     getFields();
   }, []);
 
-  function refresh() {
+  function refreshFields() {
     getFields();
   }
-  return { fields, searching , refresh };
+  return { fields, searching , refreshFields };
 }
 export default useDocumentFields;

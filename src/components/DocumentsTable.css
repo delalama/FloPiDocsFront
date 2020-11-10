@@ -1,0 +1,15 @@
+.rowFields {
+    background-color: rgb(238, 172, 110);
+    border: solid 1px rgb(67, 139, 7);
+    height: 100px;
+    width: 100px;
+    opacity: 1.0;
+    box-sizing: border-box;
+    transition: height 500ms 0ms, opacity 500ms 500ms;
+  }
+  
+  .rowFields.hide {
+    transition: height 500ms 500ms, opacity 500ms 0ms;
+    opacity: 0.0;
+    height: 0px;
+  }

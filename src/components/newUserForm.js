@@ -25,6 +25,7 @@ export default function NewUserForm() {
   var { toogleForm } = useContext(LoginFormContext);
 
   function checkChecksStatus() {
+    // TODO useRed
     var firstNameCheckIcon =
       document.getElementById("newUserFirstNameOkIcon").style.display ===
       "inline-block";

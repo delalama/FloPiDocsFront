@@ -1,4 +1,4 @@
-import React , {useState} from "react";
+import React , {useState, useContext} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -17,6 +17,8 @@ import TextField from "@material-ui/core/TextField";
 import SaveFields from "../request/useSaveFields";
 import CheckIcon from '@material-ui/icons/Check';
 import AddTooltip from "./ToolTip";
+import {FieldsContext} from "./DocumentsTable";
+import useDocumentFields from "./../request/useDocumentFields";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -32,7 +34,9 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenFieldsCreator({documentId, refreshTable}) {
+
+
+export default function FullScreenFieldsCreator({documentId, refreshFieldsFromFieldsCreator}) {
  
   const documentid = documentId;
   const classes = useStyles();
@@ -48,7 +52,12 @@ export default function FullScreenFieldsCreator({documentId, refreshTable}) {
 
     SaveFields(fieldName,fieldValue, documentid);
     setIconsInitValue();
-    refreshTable && refreshTable(true);
+    // DEADVID, no entiendo esta nomenclatura
+    setTimeout(() => {
+      refreshFieldsFromFieldsCreator && refreshFieldsFromFieldsCreator();  
+    }, 10);
+    
+    // refreshTable && refreshTable(true);
     setOpen(false);
   };
 

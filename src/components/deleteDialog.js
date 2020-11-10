@@ -60,7 +60,7 @@ const deleteButtonStyle = {
 
 
 export default function DeleteDialogs(props) {
-  const { refresh } = useContext(FieldsContext);
+  const { refreshFields } = useContext(FieldsContext);
 
   const [open, setOpen] = React.useState(false);
   const [safeDeleteOption, setSafeDeleteOption] = useState();
@@ -77,13 +77,13 @@ export default function DeleteDialogs(props) {
       setOpen(true);
     }else{
       deleteField(fieldId);
-      setTimeout( () =>{ refresh(); }, 300);
+      setTimeout( () =>{ refreshFields(); }, 100);
     }
   };
   
   const handleClose = () => {
       deleteField(fieldId);
-      setTimeout( () =>{ refresh(); }, 300);
+      setTimeout( () =>{ refreshFields(); }, 300);
       setOpen(false);
   };
 

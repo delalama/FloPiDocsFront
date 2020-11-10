@@ -6,7 +6,7 @@ export default function useNewUser() {
   const [searching, setSearching] = useState(false);
   const [responseJson, setResponseJson] = useState();
   const [showSpinner, setShowSpinner ] = useState();
-  const [continueWithCreateUser, setContinueWithCreateUser ] = useState();
+  const [mailIsAvailable, setMailIsAvailable ] = useState();
   var { toogleForm } = useContext(LoginFormContext);
 
   var newUserForm = {
@@ -92,7 +92,7 @@ export default function useNewUser() {
   }
 
   function checkEmailAlreadyExists(){
-    setContinueWithCreateUser(false);
+    setMailIsAvailable(true);
 
     var email =document.getElementById("newUserEmail").value;
     const endpoint = getEndPoint("emailAlreadyExists");
@@ -104,7 +104,7 @@ export default function useNewUser() {
     };
     
     fetch(endpoint, requestOptions)
-    .then( res => setContinueWithCreateUser(!res.ok))
+    .then( res => setMailIsAvailable(!res.ok))
     .catch( e => onError(e));
 
     function onError(err){
@@ -112,12 +112,12 @@ export default function useNewUser() {
     }
   }
 
-  function checkMailAvailability() {
+  function createUser() {
     setShowSpinner(true);
     checkEmailAlreadyExists();
 
     setTimeout( () => {
-      if(continueWithCreateUser){
+      if(mailIsAvailable){
         createNewUser();
       }
     }, 1200);
@@ -125,5 +125,5 @@ export default function useNewUser() {
     setShowSpinner(false);
   }
 
-  return { responseJson, searching, checkMailAvailability , showSpinner};
+  return { responseJson, searching, checkMailAvailability: createUser , showSpinner};
 }

@@ -22,7 +22,7 @@ import { DocumentsContext } from "./../App";
 import CircularIndeterminate from "./CircularIndeterminate";
 import AddTooltip from "./ToolTip";
 import FullScreenFieldsCreator from "./FullScreenFieldsCreator";
-
+import "./DocumentsTable.css";
 
 const useRowStyles = makeStyles({
   root: {
@@ -59,83 +59,6 @@ function pushCheckedDocument(props) {
   );
   checkedDocumentsArray.push(props.row.id);
   console.log(checkedDocumentsArray);
-}
-
-//TODO Row es document
-function Row(props) {
-  const { row } = props;
-  const [open, setOpen] = React.useState(false);
-  const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
-  const classes = useRowStyles();
-
-  const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
-
-  const rowValuesStyle = {
-    "text-align": "center",
-  };
- function onRefreshTable() {
-
-    console.log("refreshing table event" + row.id);
-  }
-
-  return (
-    <React.Fragment>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
-          <Collapse
-            in={open}
-            timeout="auto"
-            unmountOnExit
-            id="fieldsContainer"
-          ></Collapse>
-        </TableCell>
-      </TableRow>
-      <TableRow className={classes.root}>
-        <TableCell>
-          <TableCheckboxLabels
-            id={row.id}
-            addCheckId={() => pushCheckedDocument(props)}
-          >
-            {" "}
-          </TableCheckboxLabels>
-        </TableCell>
-        <TableCell>
-          <IconButton
-            iconid={row.id}
-            aria-label="expand row"
-            size="small"
-            onClick={() => {
-              setOpen(!open);
-              setSelectedDocumentId(row.id);
-            }}
-            /*  TODO
-            MozUserSelect: "none"
-WebkitUserSelect: "none"
-msUserSelect: "none" */
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell 
-        style={rowValuesStyle} 
-        component="th" scope="row">
-          {row.title}
-        </TableCell>
-        <TableCell style={rowValuesStyle} maxLength="12">{row.purpose}</TableCell>
-        <TableCell style={rowValuesStyle} maxLength="10">{row.content}</TableCell>
-        <TableCell
-        style={rowValuesStyle} 
-        >
-          {row.date}
-          </TableCell>
-        <TableCell>
-        <FullScreenFieldsCreator documentId={row.id} refreshTable={onRefreshTable}></FullScreenFieldsCreator>
-        </TableCell>
-      </TableRow>
-      {/* //DEADVID , cómo añadir aquí un contenedor para los fields?, es para dar formato */}
-      {selectedDocumentId && open && <Field documentId={selectedDocumentId} />}
-    </React.Fragment>
-  );
 }
 
 Row.propTypes = {
@@ -214,12 +137,117 @@ export default function CollapsibleTable({ searching }) {
   );
 }
 
+//TODO Row es document
+function Row(props) {
+  const [refreshFromParent, setRefreshFromParent] = useState(1);
+
+  //DEADVID , este useState quiero hacerlo sin mandar números, solo quiero envíar un
+  // output como que se tiene que ejecutar sí o sí
+  const refreshFieldsFromFieldsCreator = () => {
+    console.log("refreshFRomRow");
+    setRefreshFromParent(refreshFromParent + 1);
+  };
+
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+  const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
+  const classes = useRowStyles();
+
+  const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
+
+  const rowValuesStyle = {
+    "text-align": "center",
+  };
+
+  const rowFieldsStyle = {
+    transition: "opacity 0.5s",
+    opacity: 1,
+  };
+
+  function onRefreshTable() {
+    console.log("refreshing table event" + row.id);
+  }
+  return (
+    <React.Fragment>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
+          <Collapse
+            in={open}
+            timeout="auto"
+            unmountOnExit
+            id="fieldsContainer"
+          ></Collapse>
+        </TableCell>
+      </TableRow>
+      <TableRow className={classes.root}>
+        <TableCell>
+          <TableCheckboxLabels
+            id={row.id}
+            addCheckId={() => pushCheckedDocument(props)}
+          >
+            {" "}
+          </TableCheckboxLabels>
+        </TableCell>
+        <TableCell>
+          <IconButton
+            iconid={row.id}
+            aria-label="expand row"
+            size="small"
+            onClick={() => {
+              setOpen(!open);
+              setSelectedDocumentId(row.id);
+            }}
+            /*  TODO
+            MozUserSelect: "none"
+WebkitUserSelect: "none"
+msUserSelect: "none" */
+          >
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell style={rowValuesStyle} component="th" scope="row">
+          {row.title}
+        </TableCell>
+        <TableCell style={rowValuesStyle} maxLength="12">
+          {row.purpose}
+        </TableCell>
+        <TableCell style={rowValuesStyle} maxLength="10">
+          {row.content}
+        </TableCell>
+        <TableCell style={rowValuesStyle}>{row.date}</TableCell>
+        <TableCell>
+          <FullScreenFieldsCreator
+            documentId={row.id}
+            refreshFieldsFromFieldsCreator={() =>
+              refreshFieldsFromFieldsCreator()
+            }
+          ></FullScreenFieldsCreator>
+        </TableCell>
+      </TableRow>
+      {/* //DEADVID , cómo añadir aquí un contenedor para los fields?, es para dar formato */}
+      {selectedDocumentId && open && (
+        <Field
+          style={rowFieldsStyle}
+          id="rowFields"
+          documentId={selectedDocumentId}
+          refreshFromParent={refreshFromParent}
+        />
+      )}
+    </React.Fragment>
+  );
+}
+
 export const FieldsContext = createContext({
-  refresh: () => {},
+  refreshFields: () => {},
 });
 
-function Field({ documentId }) {
-  const { fields, searching, refresh } = useDocumentFields(documentId);
+function Field({ documentId, refreshFromParent }) {
+  const { fields, searching, refreshFields } = useDocumentFields(documentId);
+
+  useEffect(() => {
+    console.log("useEffect Activo");
+    refreshFields();
+  }, [refreshFromParent]);
 
   let tableStyle = {
     marginTop: "3em",
@@ -233,45 +261,49 @@ function Field({ documentId }) {
 
   return (
     <React.Fragment>
-      {searching && <CircularIndeterminate></CircularIndeterminate>}
-      {fields
-        ?.map(({ id, fieldName, fieldValue }) =>
-          createField(id, fieldName, fieldValue)
-        )
-        .map((field, index) => (
-          <TableRow key={field.id} className={classes.root}>
-            <TableCell> </TableCell>
-            <TableCell colSpan="2" style={fieldStyle}>
-              {" "}
-              {field.fieldName}
-            </TableCell>
-            <TableCell colSpan="2" style={fieldStyle}>
-              {" "}
-              {field.fieldValue}
-            </TableCell>
-
-            <FieldsContext.Provider
-              value={{
-                refresh,
-              }}
+        {searching && <CircularIndeterminate></CircularIndeterminate>}
+        {fields
+          ?.map(({ id, fieldName, fieldValue }) =>
+            createField(id, fieldName, fieldValue)
+          )
+          .map((field, index) => (
+            <TableRow 
+            key={field.id} 
+            className={classes.root}
+            class="rowFields"
             >
-              <TableCell>
-                <EditDialogs
-                  fieldId={field.id}
-                  fieldName={field.fieldName}
-                  fieldValue={field.fieldValue}
-                ></EditDialogs>
+              <TableCell> </TableCell>
+              <TableCell colSpan="2" style={fieldStyle}>
+                {" "}
+                {field.fieldName}
               </TableCell>
-              <TableCell>
-                <DeleteDialogs
-                  fieldId={field.id}
-                  fieldName={field.fieldName}
-                  fieldValueuseContext={field.fieldValue}
-                ></DeleteDialogs>
+              <TableCell colSpan="2" style={fieldStyle}>
+                {" "}
+                {field.fieldValue}
               </TableCell>
-            </FieldsContext.Provider>
-          </TableRow>
-        ))}
+
+              <FieldsContext.Provider
+                value={{
+                  refreshFields,
+                }}
+              >
+                <TableCell>
+                  <EditDialogs
+                    fieldId={field.id}
+                    fieldName={field.fieldName}
+                    fieldValue={field.fieldValue}
+                  ></EditDialogs>
+                </TableCell>
+                <TableCell>
+                  <DeleteDialogs
+                    fieldId={field.id}
+                    fieldName={field.fieldName}
+                    fieldValueuseContext={field.fieldValue}
+                  ></DeleteDialogs>
+                </TableCell>
+              </FieldsContext.Provider>
+            </TableRow>
+          ))}
     </React.Fragment>
   );
 }

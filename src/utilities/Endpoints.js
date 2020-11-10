@@ -24,7 +24,7 @@ export default function getEndPoint(value) {
         case "changeSafeDelete": 
             endpoint = '/accountOptions/changeSafeDelete?userId='; break;
         case "deleteField": 
-            endpoint = '/field/deleteFieldById?fieldId='; break;
+            endpoint = '/fields/deleteFieldById?fieldId='; break;
         case "newUser": 
             endpoint = '/users/'; break;
         case "emailAlreadyExists": 
