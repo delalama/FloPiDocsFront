@@ -140,6 +140,7 @@ export default function CollapsibleTable({ searching }) {
 //TODO Row es document
 function Row(props) {
   const [refreshFromParent, setRefreshFromParent] = useState(1);
+  const { fields, searching, refreshFields } = useDocumentFields();
 
   //DEADVID , este useState quiero hacerlo sin mandar números, solo quiero envíar un
   // output como que se tiene que ejecutar sí o sí
@@ -218,20 +219,13 @@ msUserSelect: "none" */
         <TableCell>
           <FullScreenFieldsCreator
             documentId={row.id}
-            refreshFieldsFromFieldsCreator={() =>
-              refreshFieldsFromFieldsCreator()
-            }
-          ></FullScreenFieldsCreator>
+            refreshFieldsFromFieldsCreator={refreshFields}
+          />
         </TableCell>
       </TableRow>
       {/* //DEADVID , cómo añadir aquí un contenedor para los fields?, es para dar formato */}
       {selectedDocumentId && open && (
-        <Field
-          style={rowFieldsStyle}
-          id="rowFields"
-          documentId={selectedDocumentId}
-          refreshFromParent={refreshFromParent}
-        />
+        <FieldList fields={fields} searching={searching} />
       )}
     </React.Fragment>
   );
@@ -241,14 +235,7 @@ export const FieldsContext = createContext({
   refreshFields: () => {},
 });
 
-function Field({ documentId, refreshFromParent }) {
-  const { fields, searching, refreshFields } = useDocumentFields(documentId);
-
-  useEffect(() => {
-    console.log("useEffect Activo");
-    refreshFields();
-  }, [refreshFromParent]);
-
+function FieldList({ fields, searching }) {
   let tableStyle = {
     marginTop: "3em",
   };
@@ -260,50 +247,46 @@ function Field({ documentId, refreshFromParent }) {
   };
 
   return (
-    <React.Fragment>
-        {searching && <CircularIndeterminate></CircularIndeterminate>}
-        {fields
-          ?.map(({ id, fieldName, fieldValue }) =>
-            createField(id, fieldName, fieldValue)
-          )
-          .map((field, index) => (
-            <TableRow 
-            key={field.id} 
-            className={classes.root}
-            class="rowFields"
-            >
-              <TableCell> </TableCell>
-              <TableCell colSpan="2" style={fieldStyle}>
-                {" "}
-                {field.fieldName}
-              </TableCell>
-              <TableCell colSpan="2" style={fieldStyle}>
-                {" "}
-                {field.fieldValue}
-              </TableCell>
+    <div>
+      {searching && <CircularIndeterminate></CircularIndeterminate>}
+      {fields
+        ?.map(({ id, fieldName, fieldValue }) =>
+          createField(id, fieldName, fieldValue)
+        )
+        .map((field, index) => (
+          <TableRow key={field.id} className={classes.root} class="rowFields">
+            <TableCell> </TableCell>
+            <TableCell colSpan="2" style={fieldStyle}>
+              {" "}
+              {field.fieldName}
+            </TableCell>
+            <TableCell colSpan="2" style={fieldStyle}>
+              {" "}
+              {field.fieldValue}
+            </TableCell>
 
-              <FieldsContext.Provider
-                value={{
-                  refreshFields,
-                }}
-              >
-                <TableCell>
-                  <EditDialogs
-                    fieldId={field.id}
-                    fieldName={field.fieldName}
-                    fieldValue={field.fieldValue}
-                  ></EditDialogs>
-                </TableCell>
-                <TableCell>
-                  <DeleteDialogs
-                    fieldId={field.id}
-                    fieldName={field.fieldName}
-                    fieldValueuseContext={field.fieldValue}
-                  ></DeleteDialogs>
-                </TableCell>
-              </FieldsContext.Provider>
-            </TableRow>
-          ))}
-    </React.Fragment>
+            <FieldsContext.Provider
+              value={{
+                refreshFields,
+              }}
+            >
+              <TableCell>
+                <EditDialogs
+                  fieldId={field.id}
+                  fieldName={field.fieldName}
+                  fieldValue={field.fieldValue}
+                ></EditDialogs>
+              </TableCell>
+              <TableCell>
+                <DeleteDialogs
+                  fieldId={field.id}
+                  fieldName={field.fieldName}
+                  fieldValueuseContext={field.fieldValue}
+                ></DeleteDialogs>
+              </TableCell>
+            </FieldsContext.Provider>
+          </TableRow>
+        ))}
+    </div>
   );
 }

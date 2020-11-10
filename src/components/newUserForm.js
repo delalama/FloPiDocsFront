@@ -47,9 +47,9 @@ export default function NewUserForm() {
     ];
 
     if (arrayChecks.every((value) => value === true)) {
-      displaySendButton();        
-    } 
-  } 
+      displaySendButton();
+    }
+  }
 
   function displaySendButton() {
     setDisplayNewUserFormSendButton(true);
@@ -95,7 +95,7 @@ export default function NewUserForm() {
     document.getElementById("newUserPasswordOkIcon").style.display = "none";
   }
 
-  const { response, searching, checkMailAvailability, showSpinner } = useNewUser();
+  const { response, searching, createUser, showSpinner } = useNewUser();
 
   return (
     <List>
@@ -154,17 +154,17 @@ export default function NewUserForm() {
         </ListItem>
       </form>
 
-      {displayNewUserFormSendButton && 
+      {displayNewUserFormSendButton && (
         <div>
           <Button
             color="primary"
             className={newUserFormclasses.sendButton}
-            onClick={() => checkMailAvailability()}
+            onClick={() => createUser()}
           >
             NEW USER
           </Button>
         </div>
-      }
+      )}
 
       <Button
         id="toogleButton"

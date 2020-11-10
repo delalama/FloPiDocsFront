@@ -1,12 +1,11 @@
 import getEndPoint from "../utilities/Endpoints";
-import { useState, useEffect, useContext} from "react";
-import { LoginFormContext } from '../components/LoginFom';
+import { useState, useEffect, useContext } from "react";
+import { LoginFormContext } from "../components/LoginFom";
 
 export default function useNewUser() {
   const [searching, setSearching] = useState(false);
   const [responseJson, setResponseJson] = useState();
-  const [showSpinner, setShowSpinner ] = useState();
-  const [mailIsAvailable, setMailIsAvailable ] = useState();
+  const [showSpinner, setShowSpinner] = useState();
   var { toogleForm } = useContext(LoginFormContext);
 
   var newUserForm = {
@@ -48,7 +47,7 @@ export default function useNewUser() {
     };
 
     function printError(errorName) {
-      console.log('printError func');
+      console.log("printError func");
       console.log(errorName);
       const message = document.getElementById("message");
       message.innerHTML = errorName;
@@ -70,18 +69,20 @@ export default function useNewUser() {
       return response;
     }
 
-    function nextStep(data){
+    function nextStep(data) {
       toogleForm();
     }
 
-    setSearching(true);
-
     fetch(endPoint, requestOptions)
-      .then((res) => res.json() )
-      .then( data => {nextStep(data); console.log(data)})
-      .catch( err => console.log(err))
-    
-      setSearching(false);
+      .then((res) => res.json())
+      .then((data) => {
+        nextStep(data);
+        console.log(data);
+      })
+      .catch((err) => console.log(err))
+      .finally();
+
+    setSearching(false);
   }
 
   function handleResponse(response) {
@@ -91,39 +92,28 @@ export default function useNewUser() {
     //    else eraseForm(response);
   }
 
-  function checkEmailAlreadyExists(){
-    setMailIsAvailable(true);
-
-    var email =document.getElementById("newUserEmail").value;
+  function checkEmailAlreadyExists() {
+    var email = document.getElementById("newUserEmail").value;
     const endpoint = getEndPoint("emailAlreadyExists");
 
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify( {email: email}),
+      body: JSON.stringify({ email: email }),
     };
-    
-    fetch(endpoint, requestOptions)
-    .then( res => setMailIsAvailable(!res.ok))
-    .catch( e => onError(e));
 
-    function onError(err){
-      console.log(err);
-    }
+    return fetch(endpoint, requestOptions)
+      .then((res) => !res.ok)
+      .catch(contole.log);
   }
 
   function createUser() {
     setShowSpinner(true);
-    checkEmailAlreadyExists();
-
-    setTimeout( () => {
-      if(mailIsAvailable){
-        createNewUser();
-      }
-    }, 1200);
-    
-    setShowSpinner(false);
+    checkEmailAlreadyExists()
+      .then((available) => available && createNewUser())
+      .catch()
+      .finally(() => setShowSpinner(false));
   }
 
-  return { responseJson, searching, checkMailAvailability: createUser , showSpinner};
+  return { responseJson, searching, createUser, showSpinner };
 }
