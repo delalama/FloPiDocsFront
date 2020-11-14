@@ -49,6 +49,7 @@ export default function LoginForm2({ onUserLogin }) {
   };
 
   function setClose(userId) {
+    // DEAD!!
     onUserLogin && onUserLogin(userId);
   }
   // TODO se sigue manteniendo el userId en localStorage la primera vez que se crea el usuario y loguea

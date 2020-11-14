@@ -140,6 +140,7 @@ export default function CollapsibleTable({ searching }) {
 //TODO Row es document
 function Row(props) {
   const [refreshFromParent, setRefreshFromParent] = useState(1);
+  const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const { fields, searching, refreshFields } = useDocumentFields();
 
   //DEADVID , este useState quiero hacerlo sin mandar números, solo quiero envíar un
@@ -151,7 +152,6 @@ function Row(props) {
 
   const { row } = props;
   const [open, setOpen] = React.useState(false);
-  const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const classes = useRowStyles();
 
   const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
@@ -160,14 +160,7 @@ function Row(props) {
     "text-align": "center",
   };
 
-  const rowFieldsStyle = {
-    transition: "opacity 0.5s",
-    opacity: 1,
-  };
 
-  function onRefreshTable() {
-    console.log("refreshing table event" + row.id);
-  }
   return (
     <React.Fragment>
       <TableRow>
@@ -195,8 +188,8 @@ function Row(props) {
             aria-label="expand row"
             size="small"
             onClick={() => {
-              setOpen(!open);
               setSelectedDocumentId(row.id);
+              setOpen(!open);
             }}
             /*  TODO
             MozUserSelect: "none"
@@ -265,11 +258,6 @@ function FieldList({ fields, searching }) {
               {field.fieldValue}
             </TableCell>
 
-            <FieldsContext.Provider
-              value={{
-                refreshFields,
-              }}
-            >
               <TableCell>
                 <EditDialogs
                   fieldId={field.id}
@@ -284,7 +272,6 @@ function FieldList({ fields, searching }) {
                   fieldValueuseContext={field.fieldValue}
                 ></DeleteDialogs>
               </TableCell>
-            </FieldsContext.Provider>
           </TableRow>
         ))}
     </div>

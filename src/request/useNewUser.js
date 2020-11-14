@@ -99,12 +99,12 @@ export default function useNewUser() {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: email }),
+      body:  email ,
     };
 
     return fetch(endpoint, requestOptions)
-      .then((res) => !res.ok)
-      .catch(contole.log);
+      .then((res) => res.ok )
+      .catch(console.log);
   }
 
   function createUser() {

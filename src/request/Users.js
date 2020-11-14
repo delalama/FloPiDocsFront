@@ -24,8 +24,14 @@ export default function useUsers() {
     const [user, setUser] = useState([]);
   
     const endpoint = getEndpoint(login);
-    const params = "?email=" + obj.email + "&password=" + obj.password;
-    const query = endpoint + params;
+  
+    const query = endpoint ;
+
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: obj.email , password: obj.password}),
+    };
 
     useEffect(() => {
       setSearching(true);
