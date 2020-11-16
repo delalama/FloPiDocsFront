@@ -18,7 +18,7 @@ function TablePaginationDemo() {
   };
 
   const paginatorStyle = {
-    "background-color" : 'aquamarine',
+    "backgroundColor" : 'aquamarine',
   }
 
   return (

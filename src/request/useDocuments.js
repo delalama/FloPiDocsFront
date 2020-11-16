@@ -13,10 +13,7 @@ function useDocuments() {
     fetch(query)
       .then((response) => response.json())
       .then(setDocuments, console.log())
-      // .finally(() => setSearching(false));
       .finally(() => console.log());
-    setTimeout(() => console.log("hola"), 4000);
-    // setTimeout( () => setSearching(false), 4000);
   }
 
   useEffect(() => {
@@ -29,7 +26,8 @@ function useDocuments() {
     }, 500);
   }
 
-  function getDocumentsByText(text) {
+  function getDocumentsByText(props) {
+    console.log(props);
     var text = document.getElementById("searchBar").value;
     console.log(text);
 
@@ -37,7 +35,9 @@ function useDocuments() {
       // DEADVID , esto tiene que ser un get y pasar KEY y USERID por requestparam? , es que FETCH() no permite hacer GETS con body....
       setSearching(true);
       var userId = localStorage.getItem("userId");
-      var endPoint = getEndPoint("findByTitleAndPurposeContains");
+      var endPoint = "";
+      props ?  endPoint = getEndPoint("findByTitle") : endPoint = getEndPoint("findByPurpose");
+      console.log(endPoint);
       var params = "?userId=" + userId + "&key=" + text;
       var query = endPoint + params;
       console.log("buscando");

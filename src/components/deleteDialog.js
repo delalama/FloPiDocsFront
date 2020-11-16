@@ -9,8 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import deleteField from './../request/deleteField';
-import {DocumentsContext} from './../App';
 import {FieldsContext} from './DocumentsTable';
+import useDocumentFields from "../request/useDocumentFields";
 
 const styles = (theme) => ({
   root: {
@@ -60,30 +60,29 @@ const deleteButtonStyle = {
 
 
 export default function DeleteDialogs(props) {
-  const { refreshFields } = useContext(FieldsContext);
 
   const [open, setOpen] = React.useState(false);
   const [safeDeleteOption, setSafeDeleteOption] = useState();
-
 
   const fieldId=props.fieldId;
 
   const handleClickOpen = () => {
     var safeDeleteActive = null;
-    localStorage.getItem('safeDelete') == 'true' ? safeDeleteActive=true: safeDeleteActive=false;
+    localStorage.getItem('safeDelete') === 'true' ? safeDeleteActive=true: safeDeleteActive=false;
     setSafeDeleteOption(safeDeleteActive);
     
     if(safeDeleteActive){
       setOpen(true);
     }else{
       deleteField(fieldId);
-      setTimeout( () =>{ refreshFields(); }, 100);
+      setTimeout( () =>{ props.refreshFields && props.refreshFields(); }, 100);
     }
   };
   
   const handleClose = () => {
       deleteField(fieldId);
-      setTimeout( () =>{ refreshFields(); }, 300);
+      setTimeout( () =>{ props.refreshFields && props.refreshFields(); }, 100);
+   
       setOpen(false);
   };
 

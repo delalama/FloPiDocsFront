@@ -87,7 +87,7 @@ export default function CollapsibleTable({ searching }) {
   }, [refreshTableState]);
 
   let tableStyle = {
-    "margin-top": "4em",
+    "marginTop": "4em",
   };
 
   const tableHeadStyle = {
@@ -95,12 +95,12 @@ export default function CollapsibleTable({ searching }) {
   };
 
   const tableBodyStyle = {
-    "background-color": "wheat",
+    "backgroundColor": "wheat",
   };
 
   const upperTitleColumnNameStyle = {
-    "text-align": "center",
-    "font-weight": "bold",
+    "textAlign": "center",
+    "fontWeight": "bold",
   };
 
   return (
@@ -137,11 +137,17 @@ export default function CollapsibleTable({ searching }) {
   );
 }
 
+export const FieldsContext = createContext({
+  refreshFields: () => {},
+  searchingDocuments: Boolean,
+});
+
 //TODO Row es document
 function Row(props) {
   const [refreshFromParent, setRefreshFromParent] = useState(1);
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
-  const { fields, searching, refreshFields } = useDocumentFields();
+  const { row } = props;
+  const { fields, searching, refreshFields } = useDocumentFields(row.id);
 
   //DEADVID , este useState quiero hacerlo sin mandar números, solo quiero envíar un
   // output como que se tiene que ejecutar sí o sí
@@ -150,14 +156,13 @@ function Row(props) {
     setRefreshFromParent(refreshFromParent + 1);
   };
 
-  const { row } = props;
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
   const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
 
   const rowValuesStyle = {
-    "text-align": "center",
+    "textAlign": "center",
   };
 
 
@@ -189,12 +194,9 @@ function Row(props) {
             size="small"
             onClick={() => {
               setSelectedDocumentId(row.id);
+              refreshFields(row.id);
               setOpen(!open);
             }}
-            /*  TODO
-            MozUserSelect: "none"
-WebkitUserSelect: "none"
-msUserSelect: "none" */
           >
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
@@ -212,23 +214,22 @@ msUserSelect: "none" */
         <TableCell>
           <FullScreenFieldsCreator
             documentId={row.id}
-            refreshFieldsFromFieldsCreator={refreshFields}
+            refreshFieldsFromFieldsCreator={() => refreshFields(row.id)}
           />
         </TableCell>
       </TableRow>
-      {/* //DEADVID , cómo añadir aquí un contenedor para los fields?, es para dar formato */}
+
       {selectedDocumentId && open && (
-        <FieldList fields={fields} searching={searching} />
-      )}
+        <FieldList fields={fields} rowId={row.id} searching={searching} 
+        refreshFields={() => refreshFields(row.id)}
+        />
+        )}
     </React.Fragment>
-  );
+  )
 }
 
-export const FieldsContext = createContext({
-  refreshFields: () => {},
-});
 
-function FieldList({ fields, searching }) {
+function FieldList({ fields, searching, rowId, refreshFields }) {
   let tableStyle = {
     marginTop: "3em",
   };
@@ -236,19 +237,22 @@ function FieldList({ fields, searching }) {
   const classes = useRowStyles();
 
   const fieldStyle = {
-    color: "green",
+    color: "black",
+    fontFamily: "monospace",
+    fontSize: "1em",
   };
 
   return (
-    <div>
-      {searching && <CircularIndeterminate></CircularIndeterminate>}
+    <React.Fragment>
+
+      {/* {searching && <CircularIndeterminate></CircularIndeterminate>} */}
       {fields
         ?.map(({ id, fieldName, fieldValue }) =>
           createField(id, fieldName, fieldValue)
         )
         .map((field, index) => (
-          <TableRow key={field.id} className={classes.root} class="rowFields">
-            <TableCell> </TableCell>
+          <TableRow key={field.id} className={classes.root}>
+            <TableCell></TableCell>
             <TableCell colSpan="2" style={fieldStyle}>
               {" "}
               {field.fieldName}
@@ -267,13 +271,15 @@ function FieldList({ fields, searching }) {
               </TableCell>
               <TableCell>
                 <DeleteDialogs
+                  rowId={rowId}
                   fieldId={field.id}
                   fieldName={field.fieldName}
                   fieldValueuseContext={field.fieldValue}
+                  refreshFields={() => refreshFields(rowId)}
                 ></DeleteDialogs>
               </TableCell>
           </TableRow>
         ))}
-    </div>
+      </React.Fragment> 
   );
 }

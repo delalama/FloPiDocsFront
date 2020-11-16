@@ -26,8 +26,8 @@ function App() {
     getDocumentsByText,
   } = useDocuments();
 
-  const search = () => {
-    getDocumentsByText();
+  const search = (prop) => {
+    getDocumentsByText(prop);
   };
 
   function handleOnUserLogin() {

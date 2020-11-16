@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import getEndPoint from "../utilities/Endpoints";
 
-function useDocumentFields(documentId) {
+function useDocumentFields() {
   const [searching, setSearching] = useState(false);
   const [fields, setFields] = useState([]);
 
-  const query = getEndPoint("getFieldsByDocumentId") + documentId;
-
-  function getFields() {
+  
+  function getFields(id) {
+    const query = getEndPoint("getFieldsByDocumentId") + id;
     setSearching(true);
     fetch(query)
       .then((response) => response.json())
@@ -22,8 +22,9 @@ function useDocumentFields(documentId) {
     getFields();
   }, []);
 
-  function refreshFields() {
-    getFields();
+  function refreshFields(id) {
+    console.log(id);
+    getFields(id);
   }
   return { fields, searching , refreshFields };
 }
