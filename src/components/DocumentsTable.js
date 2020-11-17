@@ -87,7 +87,7 @@ export default function CollapsibleTable({ searching }) {
   }, [refreshTableState]);
 
   let tableStyle = {
-    "marginTop": "4em",
+    marginTop: "4em",
   };
 
   const tableHeadStyle = {
@@ -95,12 +95,12 @@ export default function CollapsibleTable({ searching }) {
   };
 
   const tableBodyStyle = {
-    "backgroundColor": "wheat",
+    backgroundColor: "wheat",
   };
 
   const upperTitleColumnNameStyle = {
-    "textAlign": "center",
-    "fontWeight": "bold",
+    textAlign: "center",
+    fontWeight: "bold",
   };
 
   return (
@@ -162,9 +162,12 @@ function Row(props) {
   const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
 
   const rowValuesStyle = {
-    "textAlign": "center",
+    textAlign: "center",
+    whiteSpace: "nowrap",
+    textOverFlow: "ellipsis",
+    overflow: "hidden",
+    width: "50px",
   };
-
 
   return (
     <React.Fragment>
@@ -201,7 +204,7 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell style={rowValuesStyle} component="th" scope="row">
+        <TableCell style={rowValuesStyle} maxLength="12">
           {row.title}
         </TableCell>
         <TableCell style={rowValuesStyle} maxLength="12">
@@ -220,14 +223,16 @@ function Row(props) {
       </TableRow>
 
       {selectedDocumentId && open && (
-        <FieldList fields={fields} rowId={row.id} searching={searching} 
-        refreshFields={() => refreshFields(row.id)}
+        <FieldList
+          fields={fields}
+          rowId={row.id}
+          searching={searching}
+          refreshFields={() => refreshFields(row.id)}
         />
-        )}
+      )}
     </React.Fragment>
-  )
+  );
 }
-
 
 function FieldList({ fields, searching, rowId, refreshFields }) {
   let tableStyle = {
@@ -236,15 +241,28 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
 
   const classes = useRowStyles();
 
-  const fieldStyle = {
-    color: "black",
-    fontFamily: "monospace",
-    fontSize: "1em",
+  const styles = {
+    fieldStyle: {
+      color: "black",
+      fontFamily: "monospace",
+      fontSize: "1em",
+      textAlign: "center",
+      whiteSpace: "nowrap",
+      "text-overflow": "ellipsis",
+      overflow: "hidden",
+      "max-width": "15vw",
+    },
   };
+
+  function mouseOverField(e) {
+    e.target.style.whiteSpace = "normal";
+  }
+  function mouseLeaveField(e) {
+    e.target.style.whiteSpace = "nowrap";
+  }
 
   return (
     <React.Fragment>
-
       {/* {searching && <CircularIndeterminate></CircularIndeterminate>} */}
       {fields
         ?.map(({ id, fieldName, fieldValue }) =>
@@ -253,33 +271,33 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
         .map((field, index) => (
           <TableRow key={field.id} className={classes.root}>
             <TableCell></TableCell>
-            <TableCell colSpan="2" style={fieldStyle}>
+            <TableCell onMouseOver={mouseOverField} onMouseLeave={mouseLeaveField} colSpan="2" style={styles.fieldStyle}>
               {" "}
               {field.fieldName}
             </TableCell>
-            <TableCell colSpan="2" style={fieldStyle}>
+            <TableCell onMouseOver={mouseOverField} onMouseLeave={mouseLeaveField} colSpan="2" style={styles.fieldStyle}>
               {" "}
               {field.fieldValue}
             </TableCell>
 
-              <TableCell>
-                <EditDialogs
-                  fieldId={field.id}
-                  fieldName={field.fieldName}
-                  fieldValue={field.fieldValue}
-                ></EditDialogs>
-              </TableCell>
-              <TableCell>
-                <DeleteDialogs
-                  rowId={rowId}
-                  fieldId={field.id}
-                  fieldName={field.fieldName}
-                  fieldValueuseContext={field.fieldValue}
-                  refreshFields={() => refreshFields(rowId)}
-                ></DeleteDialogs>
-              </TableCell>
+            <TableCell>
+              <EditDialogs
+                fieldId={field.id}
+                fieldName={field.fieldName}
+                fieldValue={field.fieldValue}
+              ></EditDialogs>
+            </TableCell>
+            <TableCell>
+              <DeleteDialogs
+                rowId={rowId}
+                fieldId={field.id}
+                fieldName={field.fieldName}
+                fieldValueuseContext={field.fieldValue}
+                refreshFields={() => refreshFields(rowId)}
+              ></DeleteDialogs>
+            </TableCell>
           </TableRow>
         ))}
-      </React.Fragment> 
+    </React.Fragment>
   );
 }

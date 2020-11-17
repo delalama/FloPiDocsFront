@@ -82,7 +82,10 @@ export default function DeleteDialogs(props) {
   const handleClose = () => {
       deleteField(fieldId);
       setTimeout( () =>{ props.refreshFields && props.refreshFields(); }, 100);
-   
+      setOpen(false);
+  };
+  
+  const handleCloseWithoutDelete = () => {
       setOpen(false);
   };
 
@@ -95,7 +98,7 @@ export default function DeleteDialogs(props) {
         DELETE
       </Button>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
-        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+        <DialogTitle id="customized-dialog-title" onClose={handleCloseWithoutDelete}>
           You cannot UNDO a delete action, do you really want to delete?
         </DialogTitle>
         <DialogContent dividers>

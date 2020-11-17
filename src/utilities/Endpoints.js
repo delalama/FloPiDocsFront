@@ -19,7 +19,7 @@ export default function getEndPoint(value) {
         endpoint = "/document/countByUserId?userId=";
         break;
       case "getAllDocumentsByUserId":
-        endpoint = "/document/getAllDocumentsByUserId?userId=";
+        endpoint = "/document?userId=";
         break;
       case "saveDocument":
         endpoint = "/document/createDocument?userId=";
