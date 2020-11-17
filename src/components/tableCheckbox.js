@@ -1,21 +1,20 @@
-import React from "react";
+import React , {useState, useEffect} from "react";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
 
-export default function TableCheckboxLabels(props) {
-  const [state, setState] = React.useState({
-    checkedC: false,
-  });
+export default function TableCheckboxLabels( props ) {
+  let [state, setState] = useState(false);
 
   const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+    setState(!state);
   };
-
+  
   const documentId = props.id;
 
   function onCheck (){
+    setState(true);
     props.addCheckId(documentId);
   }
 
@@ -23,8 +22,7 @@ export default function TableCheckboxLabels(props) {
     <FormGroup row>
       <FormControlLabel
         control={<Checkbox 
-            checked={state.checkedC}
-            name="checkedC"
+            checked={state}
             onChange={handleChange}
             onClick={ () => onCheck()}
              />}

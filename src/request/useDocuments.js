@@ -4,9 +4,9 @@ import getEndPoint from "../utilities/Endpoints";
 function useDocuments() {
   const [searchingDocuments, setSearching] = useState(false);
   const [documents, setDocuments] = useState([]);
+  const [deleteResponse, setDeleteResponse] = useState([]) ;
 
-  const query =
-    getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
+  const query = getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
 
   function fetchDocuments() {
     setSearching(true);
@@ -24,6 +24,26 @@ function useDocuments() {
     setTimeout(() => {
       fetchDocuments();
     }, 500);
+  }
+
+  function deleteDocument(documentDto) {
+    console.log('delete document: ', documentDto);
+
+    const endPoint = getEndPoint("document");
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body:  JSON.stringify( documentDto ),
+      // body:  { id: documentDto.id, userId: documentDto.userId },
+    };
+    setSearching(true);
+    fetch(endPoint, requestOptions)
+      .then((response) => response.json())
+      .then( setDeleteResponse)
+      .finally(() => refresh()) ;
+
+    return deleteResponse;
   }
 
   function getDocumentsByText(props) {
@@ -55,6 +75,6 @@ function useDocuments() {
   function clear() {
     setDocuments([]);
   }
-  return { documents, searchingDocuments, refresh, clear, getDocumentsByText };
+  return { documents, searchingDocuments, refresh, clear, getDocumentsByText, deleteDocument };
 }
 export default useDocuments;

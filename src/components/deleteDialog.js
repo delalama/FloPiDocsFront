@@ -9,7 +9,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import deleteField from './../request/deleteField';
-import {FieldsContext} from './DocumentsTable';
 import useDocumentFields from "../request/useDocumentFields";
 
 const styles = (theme) => ({

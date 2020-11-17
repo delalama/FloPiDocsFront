@@ -21,6 +21,9 @@ export default function getEndPoint(value) {
       case "getAllDocumentsByUserId":
         endpoint = "/document?userId=";
         break;
+      case "document":
+        endpoint = "/document";
+        break;
       case "saveDocument":
         endpoint = "/document/createDocument?userId=";
         break;

@@ -10,6 +10,7 @@ export const DocumentsContext = createContext({
   refresh: () => {},
   clear: () => {},
   searchingDocuments: Boolean,
+  deleteDocument: () => {},
 });
 
 export const SearchContext = createContext({
@@ -24,6 +25,7 @@ function App() {
     refresh,
     clear,
     getDocumentsByText,
+    deleteDocument,
   } = useDocuments();
 
   const search = (prop) => {
@@ -51,6 +53,7 @@ function App() {
               documents,
               refresh,
               clear,
+              deleteDocument,
             }}
           >
             {!showTable && (

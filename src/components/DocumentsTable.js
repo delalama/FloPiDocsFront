@@ -17,12 +17,13 @@ import TablePaginationDemo from "./TablePagination";
 import DeleteDialogs from "./deleteDialog";
 import EditDialogs from "./editDialog";
 import TableCheckboxLabels from "./tableCheckbox";
-import useCheckArray from "./useCheckArray";
 import { DocumentsContext } from "./../App";
 import CircularIndeterminate from "./CircularIndeterminate";
 import AddTooltip from "./ToolTip";
 import FullScreenFieldsCreator from "./FullScreenFieldsCreator";
 import "./DocumentsTable.css";
+import { Button } from "@material-ui/core";
+import DocumentIdAndUserID from "./../classes/document";
 
 const useRowStyles = makeStyles({
   root: {
@@ -53,14 +54,6 @@ function createField(id, fieldName, fieldValue) {
 // TODO SELECCIÓN DE DOCUMENTOS PARA MOSTRAR OPCIONES DE EXPORTACIÓN
 const checkedDocumentsArray = [];
 
-function pushCheckedDocument(props) {
-  const found = checkedDocumentsArray.find(
-    (element) => element === props.row.id
-  );
-  checkedDocumentsArray.push(props.row.id);
-  console.log(checkedDocumentsArray);
-}
-
 Row.propTypes = {
   row: PropTypes.shape({
     title: PropTypes.string.isRequired,
@@ -76,7 +69,7 @@ Row.propTypes = {
 };
 
 export default function CollapsibleTable({ searching }) {
-  const { documents, refresh, searchingDocuments } = useContext(
+  const { documents, refresh, searchingDocuments, deleteDocument } = useContext(
     DocumentsContext
   );
 
@@ -86,41 +79,37 @@ export default function CollapsibleTable({ searching }) {
     refresh();
   }, [refreshTableState]);
 
-  let tableStyle = {
-    marginTop: "4em",
-  };
-
-  const tableHeadStyle = {
-    background: "darkseagreen",
-  };
-
-  const tableBodyStyle = {
-    backgroundColor: "wheat",
-  };
-
-  const upperTitleColumnNameStyle = {
-    textAlign: "center",
-    fontWeight: "bold",
-  };
-
   return (
     <div>
       {searchingDocuments && <CircularIndeterminate></CircularIndeterminate>}
-      <TableContainer style={tableStyle} component={Paper} id="documentsTable">
+      <TableContainer
+        style={Styles.tableStyle}
+        component={Paper}
+        id="documentsTable"
+      >
         <Table aria-label="collapsible table">
-          <TableHead style={tableHeadStyle}>
+          <TableHead style={Styles.tableHeadStyle}>
             <TableRow>
               <TableCell id="selectColumn"></TableCell>
               <TableCell></TableCell>
-              <TableCell style={upperTitleColumnNameStyle}>Title </TableCell>
-              <TableCell style={upperTitleColumnNameStyle}>Purpose</TableCell>
-              <TableCell style={upperTitleColumnNameStyle}>Content</TableCell>
-              <TableCell style={upperTitleColumnNameStyle}>Date</TableCell>
+              <TableCell style={Styles.upperTitleColumnNameStyle}>
+                Title{" "}
+              </TableCell>
+              <TableCell style={Styles.upperTitleColumnNameStyle}>
+                Purpose
+              </TableCell>
+              <TableCell style={Styles.upperTitleColumnNameStyle}>
+                Content
+              </TableCell>
+              <TableCell style={Styles.upperTitleColumnNameStyle}>
+                Date
+              </TableCell>
+              <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
           </TableHead>
           {!refreshTableState && (
-            <TableBody style={tableBodyStyle}>
+            <TableBody style={Styles.tableBodyStyle}>
               {documents
                 ?.map(({ id, title, purpose, content, date }) =>
                   createData(id, title, purpose, content, date)
@@ -136,38 +125,31 @@ export default function CollapsibleTable({ searching }) {
     </div>
   );
 }
-
-export const FieldsContext = createContext({
-  refreshFields: () => {},
-  searchingDocuments: Boolean,
-});
+var checkedRowArr = [];
 
 //TODO Row es document
 function Row(props) {
-  const [refreshFromParent, setRefreshFromParent] = useState(1);
+  const { deleteDocument } = useContext(
+    DocumentsContext
+  );
+
+
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const { row } = props;
   const { fields, searching, refreshFields } = useDocumentFields(row.id);
-
-  //DEADVID , este useState quiero hacerlo sin mandar números, solo quiero envíar un
-  // output como que se tiene que ejecutar sí o sí
-  const refreshFieldsFromFieldsCreator = () => {
-    console.log("refreshFRomRow");
-    setRefreshFromParent(refreshFromParent + 1);
-  };
+  const [isChecked, setIsChecked] = useState(false);
 
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
-  const { checkedArray, setCheckedArray, addCheckedId } = useCheckArray();
+  // TODO ACTUAL, tenemos en checkedRowArr los id's de los rows checked, a por las opciones
+  function pushCheck(data) {
+    setIsChecked(!isChecked);
+    let id = data.row.id;
+    var index = checkedRowArr.findIndex((v) => v === id);
 
-  const rowValuesStyle = {
-    textAlign: "center",
-    whiteSpace: "nowrap",
-    textOverFlow: "ellipsis",
-    overflow: "hidden",
-    width: "50px",
-  };
+    index === -1 ? checkedRowArr.push(id) : checkedRowArr.splice(index, 1);
+  }
 
   return (
     <React.Fragment>
@@ -183,10 +165,7 @@ function Row(props) {
       </TableRow>
       <TableRow className={classes.root}>
         <TableCell>
-          <TableCheckboxLabels
-            id={row.id}
-            addCheckId={() => pushCheckedDocument(props)}
-          >
+          <TableCheckboxLabels id={row.id} addCheckId={() => pushCheck(props)}>
             {" "}
           </TableCheckboxLabels>
         </TableCell>
@@ -204,22 +183,32 @@ function Row(props) {
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
-        <TableCell style={rowValuesStyle} maxLength="12">
+        <TableCell style={Styles.rowValuesStyle} maxLength="12">
           {row.title}
         </TableCell>
-        <TableCell style={rowValuesStyle} maxLength="12">
+        <TableCell style={Styles.rowValuesStyle} maxLength="12">
           {row.purpose}
         </TableCell>
-        <TableCell style={rowValuesStyle} maxLength="10">
+        <TableCell style={Styles.rowValuesStyle} maxLength="10">
           {row.content}
         </TableCell>
-        <TableCell style={rowValuesStyle}>{row.date}</TableCell>
+        <TableCell style={Styles.rowValuesStyle}>{row.date}</TableCell>
         <TableCell>
           <FullScreenFieldsCreator
             documentId={row.id}
             refreshFieldsFromFieldsCreator={() => refreshFields(row.id)}
           />
         </TableCell>
+        {isChecked && (
+          <TableCell>
+            <Button variant="contained" color="primary">
+              edit
+            </Button>
+            <Button variant="contained" color="secondary" onClick={() => deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),row.id) )}>
+              delete
+            </Button>
+          </TableCell>
+        )}
       </TableRow>
 
       {selectedDocumentId && open && (
@@ -248,9 +237,9 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
       fontSize: "1em",
       textAlign: "center",
       whiteSpace: "nowrap",
-      "text-overflow": "ellipsis",
+      textOverflow: "ellipsis",
       overflow: "hidden",
-      "max-width": "15vw",
+      maxWidth: "15vw",
     },
   };
 
@@ -271,11 +260,21 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
         .map((field, index) => (
           <TableRow key={field.id} className={classes.root}>
             <TableCell></TableCell>
-            <TableCell onMouseOver={mouseOverField} onMouseLeave={mouseLeaveField} colSpan="2" style={styles.fieldStyle}>
+            <TableCell
+              onMouseOver={mouseOverField}
+              onMouseLeave={mouseLeaveField}
+              colSpan="2"
+              style={styles.fieldStyle}
+            >
               {" "}
               {field.fieldName}
             </TableCell>
-            <TableCell onMouseOver={mouseOverField} onMouseLeave={mouseLeaveField} colSpan="2" style={styles.fieldStyle}>
+            <TableCell
+              onMouseOver={mouseOverField}
+              onMouseLeave={mouseLeaveField}
+              colSpan="2"
+              style={styles.fieldStyle}
+            >
               {" "}
               {field.fieldValue}
             </TableCell>
@@ -301,3 +300,26 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
     </React.Fragment>
   );
 }
+
+const Styles = {
+  rowValuesStyle: {
+    textAlign: "center",
+    whiteSpace: "nowrap",
+    textOverFlow: "ellipsis",
+    overflow: "hidden",
+    width: "50px",
+  },
+  tableStyle: {
+    marginTop: "4em",
+  },
+  tableHeadStyle: {
+    background: "darkseagreen",
+  },
+  tableBodyStyle: {
+    backgroundColor: "wheat",
+  },
+  upperTitleColumnNameStyle: {
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+};
