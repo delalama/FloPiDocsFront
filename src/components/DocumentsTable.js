@@ -14,8 +14,8 @@ import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import useDocumentFields from "../request/useDocumentFields";
 import TablePaginationDemo from "./TablePagination";
-import DeleteDialogs from "./deleteDialog";
-import EditDialogs from "./editDialog";
+import DeleteFieldDialogs from "./DeleteFieldDialogs";
+import EditDialogs from "./EditFieldDialog";
 import TableCheckboxLabels from "./tableCheckbox";
 import { DocumentsContext } from "./../App";
 import CircularIndeterminate from "./CircularIndeterminate";
@@ -287,13 +287,13 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
               ></EditDialogs>
             </TableCell>
             <TableCell>
-              <DeleteDialogs
+              <DeleteFieldDialogs
                 rowId={rowId}
                 fieldId={field.id}
                 fieldName={field.fieldName}
                 fieldValueuseContext={field.fieldValue}
                 refreshFields={() => refreshFields(rowId)}
-              ></DeleteDialogs>
+              ></DeleteFieldDialogs>
             </TableCell>
           </TableRow>
         ))}

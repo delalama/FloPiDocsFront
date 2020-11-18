@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,8 +8,8 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
-import deleteField from './../request/deleteField';
-import useDocumentFields from "../request/useDocumentFields";
+import deleteField from '../request/deleteField';
+
 
 const styles = (theme) => ({
   root: {
@@ -58,7 +58,7 @@ const deleteButtonStyle = {
   };
 
 
-export default function DeleteDialogs(props) {
+export default function DeleteFieldDialogs(props) {
 
   const [open, setOpen] = React.useState(false);
   const [safeDeleteOption, setSafeDeleteOption] = useState();
