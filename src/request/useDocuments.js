@@ -4,9 +4,10 @@ import getEndPoint from "../utilities/Endpoints";
 function useDocuments() {
   const [searchingDocuments, setSearching] = useState(false);
   const [documents, setDocuments] = useState([]);
-  const [deleteResponse, setDeleteResponse] = useState([]) ;
+  const [deleteResponse, setDeleteResponse] = useState([]);
 
-  const query = getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
+  const query =
+    getEndPoint("getAllDocumentsByUserId") + localStorage.getItem("userId");
 
   function fetchDocuments() {
     setSearching(true);
@@ -14,6 +15,7 @@ function useDocuments() {
       .then((response) => response.json())
       .then(setDocuments, console.log())
       .finally(() => console.log());
+      setSearching(false);
   }
 
   useEffect(() => {
@@ -27,23 +29,20 @@ function useDocuments() {
   }
 
   function deleteDocument(documentDto) {
-    console.log('delete document: ', documentDto);
-
     const endPoint = getEndPoint("document");
 
     const requestOptions = {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body:  JSON.stringify( documentDto ),
-      // body:  { id: documentDto.id, userId: documentDto.userId },
+      body: JSON.stringify(documentDto),
     };
+
     setSearching(true);
     fetch(endPoint, requestOptions)
       .then((response) => response.json())
-      .then( setDeleteResponse)
-      .finally(() => refresh()) ;
-
-    return deleteResponse;
+      .then(setDeleteResponse)
+      .finally(() => refresh());
+    setSearching(false);
   }
 
   function getDocumentsByText(props) {
@@ -56,7 +55,9 @@ function useDocuments() {
       setSearching(true);
       var userId = localStorage.getItem("userId");
       var endPoint = "";
-      props ?  endPoint = getEndPoint("findByTitle") : endPoint = getEndPoint("findByPurpose");
+      props
+        ? (endPoint = getEndPoint("findByTitle"))
+        : (endPoint = getEndPoint("findByPurpose"));
       console.log(endPoint);
       var params = "?userId=" + userId + "&key=" + text;
       var query = endPoint + params;
@@ -65,16 +66,42 @@ function useDocuments() {
         .then((response) => response.json())
         .then(setDocuments, console.log())
         .finally(() => setSearching(false));
-    }else{ 
-      refresh()
+    } else {
+      refresh();
     }
 
     // console.log(event.target);
   }
 
+  function updateDocument(documentDto) {
+    const endPoint = getEndPoint("document");
+
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(documentDto),
+    };
+
+    setSearching(true);
+    fetch(endPoint, requestOptions)
+      .then((response) => response.json())
+      .then(setDeleteResponse)
+      .finally(() => refresh());
+
+    return deleteResponse;
+  }
+
   function clear() {
     setDocuments([]);
   }
-  return { documents, searchingDocuments, refresh, clear, getDocumentsByText, deleteDocument };
+  return {
+    documents,
+    searchingDocuments,
+    refresh,
+    clear,
+    getDocumentsByText,
+    updateDocument,
+    deleteDocument,
+  };
 }
 export default useDocuments;

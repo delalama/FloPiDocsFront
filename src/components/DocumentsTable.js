@@ -23,7 +23,8 @@ import AddTooltip from "./ToolTip";
 import FullScreenFieldsCreator from "./FullScreenFieldsCreator";
 import "./DocumentsTable.css";
 import { Button } from "@material-ui/core";
-import DocumentIdAndUserID from "./../classes/document";
+import DeleteDocumentDialogs from "./DeleteDocumentDialogs";
+import EditDocumentDialogs from "./EditDocumentDialog";
 
 const useRowStyles = makeStyles({
   root: {
@@ -127,16 +128,12 @@ export default function CollapsibleTable({ searching }) {
 }
 var checkedRowArr = [];
 
-//TODO Row es document
 function Document(props) {
-  const { deleteDocument } = useContext(
-    DocumentsContext
-  );
-
-
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const { row: documentProps } = props;
-  const { fields, searching, refreshFields } = useDocumentFields(documentProps.id);
+  const { fields, searching, refreshFields } = useDocumentFields(
+    documentProps.id
+  );
   const [isChecked, setIsChecked] = useState(false);
 
   const [open, setOpen] = React.useState(false);
@@ -165,7 +162,10 @@ function Document(props) {
       </TableRow>
       <TableRow className={classes.root}>
         <TableCell>
-          <TableCheckboxLabels id={documentProps.id} addCheckId={() => pushCheck(props)}>
+          <TableCheckboxLabels
+            id={documentProps.id}
+            addCheckId={() => pushCheck(props)}
+          >
             {" "}
           </TableCheckboxLabels>
         </TableCell>
@@ -192,21 +192,24 @@ function Document(props) {
         <TableCell style={Styles.rowValuesStyle} maxLength="10">
           {documentProps.content}
         </TableCell>
-        <TableCell style={Styles.rowValuesStyle}>{documentProps.date}</TableCell>
+        <TableCell style={Styles.rowValuesStyle}>
+          {documentProps.date}
+        </TableCell>
         <TableCell>
           <FullScreenFieldsCreator
             documentId={documentProps.id}
-            refreshFieldsFromFieldsCreator={() => refreshFields(documentProps.id)}
+            refreshFieldsFromFieldsCreator={() =>
+              refreshFields(documentProps.id)
+            }
           />
         </TableCell>
         {isChecked && (
           <TableCell>
-            <Button variant="contained" color="primary">
-              edit
-            </Button>
-            <Button variant="contained" color="secondary" onClick={() => deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),documentProps.id) )}>
-              delete
-            </Button>
+            <EditDocumentDialogs
+            row = {documentProps}></EditDocumentDialogs>
+            <DeleteDocumentDialogs
+              documentId={documentProps.id}
+            ></DeleteDocumentDialogs>
           </TableCell>
         )}
       </TableRow>

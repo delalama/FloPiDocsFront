@@ -1,4 +1,5 @@
 import React from "react";
+import useDocuments from '../request/useDocuments';
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,6 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import {DocumentIdAndContent} from "./../classes/document";
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -53,34 +55,44 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function EditDialogs(props) {
+export default function EditDocumentDialog(props) {
   const [open, setOpen] = React.useState(false);
+  const {updateDocument} = useDocuments();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
-    const fieldName = document.getElementById('fieldName').value;
-    const fieldValue = document.getElementById('fieldValue').value;
-    console.log("vamos a editar el field con id " + fieldId);
+    const docValues = {
+      userId: localStorage.getItem("userId"),
+      id : documentId,
+      titlePost : document.getElementById("titleName").value ===""? title : document.getElementById("titleName").value,
+      purposePost : document.getElementById("purposeValue").value ===""? purpose: document.getElementById("purposeValue").value,
+      contentPost : document.getElementById("contentValue").value ===""? content: document.getElementById("contentValue").value,
+      datePost : date,
+    }
+    const documentValuesChanged = docValues.titlePost !== title || docValues.purposePost !== purpose || docValues.contentPost !== content; 
+    
+    if(documentValuesChanged){
+      updateDocument(new DocumentIdAndContent( docValues.id, docValues.userId, docValues.titlePost, docValues.purposePost, docValues.contentPost, docValues.datePost));
+    }
     setOpen(false);
   };
 
-  const fieldId = props.fieldId;
-  const fieldName = props.fieldName;
-  const fieldValue = props.fieldValue;
+  const title = props.row.title;
+  const purpose = props.row.purpose;
+  const content = props.row.content;
+  const date = props.row.date;
+  const documentId = props.row.id;
 
-  const editButtonStyle = {
-    color: 'white',
-    background: '#3f51b5',
-  };
-
-  const arrowStyle = {
-    fill: "blue",
-  };
   return (
     <div>
-      <Button style={editButtonStyle} variant="outlined" onClick={handleClickOpen}>
+      {console.log(props)}
+      <Button
+        style={Styles.editButtonStyle}
+        variant="outlined"
+        onClick={handleClickOpen}
+      >
         EDIT
       </Button>
       <Dialog
@@ -92,9 +104,16 @@ export default function EditDialogs(props) {
           Edit screen
         </DialogTitle>
         <DialogContent dividers>
-          <form  noValidate autoComplete="off">
-            <TextField id="fieldName" label={fieldName} />
-            <TextField id="fieldValue" label={fieldValue} />
+          <form noValidate autoComplete="off">
+            <div>
+              <TextField id="titleName" label={title} />
+            </div>
+            <div>
+              <TextField id="purposeValue" label={purpose} />
+            </div>
+            <div>
+              <TextField id="contentValue" label={content} />
+            </div>
           </form>
         </DialogContent>
         <DialogActions>
@@ -106,3 +125,13 @@ export default function EditDialogs(props) {
     </div>
   );
 }
+
+const Styles = {
+  editButtonStyle: {
+    color: "white",
+    background: "#3f51b5",
+  },
+  arrowStyle: {
+    fill: "blue",
+  },
+};

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import deleteField from '../request/deleteField';
+import {DocumentIdAndUserID} from "./../classes/document";
+import { DocumentsContext } from "./../App";
 
 
 const styles = (theme) => ({
@@ -58,8 +60,10 @@ const deleteButtonStyle = {
   };
 
 
-export default function DeleteFieldDialogs(props) {
-
+export default function DeleteDocumentDialogs(props) {
+  const { deleteDocument } = useContext(
+    DocumentsContext
+  );
   const [open, setOpen] = React.useState(false);
   const [safeDeleteOption, setSafeDeleteOption] = useState();
 
@@ -73,13 +77,13 @@ export default function DeleteFieldDialogs(props) {
     if(safeDeleteActive){
       setOpen(true);
     }else{
-      deleteField(fieldId);
-      setTimeout( () =>{ props.refreshFields && props.refreshFields(); }, 100);
+      console.log(props.documentId);
+      deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),props.documentId));
     }
   };
   
   const handleClose = () => {
-      deleteField(fieldId);
+      deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),props.documentId));
       setTimeout( () =>{ props.refreshFields && props.refreshFields(); }, 100);
       setOpen(false);
   };
@@ -87,9 +91,6 @@ export default function DeleteFieldDialogs(props) {
   const handleCloseWithoutDelete = () => {
       setOpen(false);
   };
-
-  //TODO JOAN, añadir aquí mediante REDUX un cambio de estado que se propague hasta getFields, 
-  // de modo que cuando borre un field se recarguen los fields!!
 
   return (
     <div>
