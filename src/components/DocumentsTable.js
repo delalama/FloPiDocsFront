@@ -54,7 +54,7 @@ function createField(id, fieldName, fieldValue) {
 // TODO SELECCIÓN DE DOCUMENTOS PARA MOSTRAR OPCIONES DE EXPORTACIÓN
 const checkedDocumentsArray = [];
 
-Row.propTypes = {
+Document.propTypes = {
   row: PropTypes.shape({
     title: PropTypes.string.isRequired,
     purpose: PropTypes.string.isRequired,
@@ -115,7 +115,7 @@ export default function CollapsibleTable({ searching }) {
                   createData(id, title, purpose, content, date)
                 )
                 .map((row, index) => (
-                  <Row key={row.id} row={row} />
+                  <Document key={row.id} row={row} />
                 ))}
             </TableBody>
           )}
@@ -128,15 +128,15 @@ export default function CollapsibleTable({ searching }) {
 var checkedRowArr = [];
 
 //TODO Row es document
-function Row(props) {
+function Document(props) {
   const { deleteDocument } = useContext(
     DocumentsContext
   );
 
 
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
-  const { row } = props;
-  const { fields, searching, refreshFields } = useDocumentFields(row.id);
+  const { row: documentProps } = props;
+  const { fields, searching, refreshFields } = useDocumentFields(documentProps.id);
   const [isChecked, setIsChecked] = useState(false);
 
   const [open, setOpen] = React.useState(false);
@@ -165,18 +165,18 @@ function Row(props) {
       </TableRow>
       <TableRow className={classes.root}>
         <TableCell>
-          <TableCheckboxLabels id={row.id} addCheckId={() => pushCheck(props)}>
+          <TableCheckboxLabels id={documentProps.id} addCheckId={() => pushCheck(props)}>
             {" "}
           </TableCheckboxLabels>
         </TableCell>
         <TableCell>
           <IconButton
-            iconid={row.id}
+            iconid={documentProps.id}
             aria-label="expand row"
             size="small"
             onClick={() => {
-              setSelectedDocumentId(row.id);
-              refreshFields(row.id);
+              setSelectedDocumentId(documentProps.id);
+              refreshFields(documentProps.id);
               setOpen(!open);
             }}
           >
@@ -184,19 +184,19 @@ function Row(props) {
           </IconButton>
         </TableCell>
         <TableCell style={Styles.rowValuesStyle} maxLength="12">
-          {row.title}
+          {documentProps.title}
         </TableCell>
         <TableCell style={Styles.rowValuesStyle} maxLength="12">
-          {row.purpose}
+          {documentProps.purpose}
         </TableCell>
         <TableCell style={Styles.rowValuesStyle} maxLength="10">
-          {row.content}
+          {documentProps.content}
         </TableCell>
-        <TableCell style={Styles.rowValuesStyle}>{row.date}</TableCell>
+        <TableCell style={Styles.rowValuesStyle}>{documentProps.date}</TableCell>
         <TableCell>
           <FullScreenFieldsCreator
-            documentId={row.id}
-            refreshFieldsFromFieldsCreator={() => refreshFields(row.id)}
+            documentId={documentProps.id}
+            refreshFieldsFromFieldsCreator={() => refreshFields(documentProps.id)}
           />
         </TableCell>
         {isChecked && (
@@ -204,7 +204,7 @@ function Row(props) {
             <Button variant="contained" color="primary">
               edit
             </Button>
-            <Button variant="contained" color="secondary" onClick={() => deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),row.id) )}>
+            <Button variant="contained" color="secondary" onClick={() => deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),documentProps.id) )}>
               delete
             </Button>
           </TableCell>
@@ -214,9 +214,9 @@ function Row(props) {
       {selectedDocumentId && open && (
         <FieldList
           fields={fields}
-          rowId={row.id}
+          rowId={documentProps.id}
           searching={searching}
-          refreshFields={() => refreshFields(row.id)}
+          refreshFields={() => refreshFields(documentProps.id)}
         />
       )}
     </React.Fragment>
