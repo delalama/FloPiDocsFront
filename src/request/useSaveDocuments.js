@@ -1,6 +1,5 @@
 import getEndPoint from "../utilities/Endpoints";
 
-//DEADVID -> HACERLO CON useEffect.........desde donde llamaría useSaveDocuments?
 function SaveDocuments(title, purpose, content) {
   const query =
     getEndPoint("saveDocument") +
@@ -22,4 +21,5 @@ function SaveDocuments(title, purpose, content) {
     .then((response) => response.json())
     .finally(console.log("documentSaved"));
 }
+
 export default SaveDocuments;

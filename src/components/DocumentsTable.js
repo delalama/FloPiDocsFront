@@ -142,7 +142,6 @@ function Document(props) {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
-  // TODO , tenemos en checkedRowArr los id's de los rows checked, a por las opciones
   function pushCheck(data) {
     setIsChecked(!isChecked);
     let id = data.row.id;

@@ -1,4 +1,4 @@
-import React from "react";
+import React , {useContext }from "react";
 import useDocuments from "../request/useDocuments";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
@@ -10,7 +10,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import { DocumentIdAndContent } from "./../classes/document";
+import { DocumentDto } from "./../classes/document";
 import Divider from "@material-ui/core/Divider";
 import { DocumentsContext } from "../App";
 const styles = (theme) => ({
@@ -90,7 +90,7 @@ export default function EditDocumentDialog(props) {
 
     if (documentValuesChanged) {
       updateDocument(
-        new DocumentIdAndContent(
+        new DocumentDto(
           docValues.id,
           docValues.userId,
           docValues.titlePost,

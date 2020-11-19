@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -14,45 +14,50 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import StringsFloPi from "./StringsFloPi";
 import TextField from "@material-ui/core/TextField";
-import SaveDocuments from "../request/useSaveDocuments";
 import TagsArray from "./TagsArray";
 import CheckIcon from "@material-ui/icons/Check";
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
-import NewTagsForm from './NewTagsForm';
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
+import NewTagsForm from "./NewTagsForm";
+import {DocumentDto} from "./../classes/document";
+import { DocumentsContext } from '../App';
 
 
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    position: "relative",
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flex: 1,
-  },
-}));
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function FullScreenEditDocument(props) {
+  const { updateDocument } = useContext(
+    DocumentsContext
+  );
   const row = props.row;
-  console.log(row);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openNewTag, setOpenNewTag] = useState(false);
-  
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleCloseOnSave = () => {
-    const title = document.getElementById("editDocTitle").value;
-    const purpose = document.getElementById("editDocPurpose").value;
-    const content = document.getElementById("editDocContent").value;
+    const title = document.getElementById("editDocTitle").value===""? row.title: document.getElementById("editDocTitle").value ;
+    const purpose = document.getElementById("editDocPurpose").value===""? row.purpose: document.getElementById("editDocPurpose").value ;
+    const content = document.getElementById("editDocContent").value===""? row.content: document.getElementById("editDocContent").value ;
 
-    SaveDocuments(title, purpose, content);
+    console.log(row);
+    const documentDto = new DocumentDto(
+      row.id,
+      localStorage.getItem('userId'),
+      title,
+      purpose,
+      content,
+      row.date
+    )
+    
+    // SaveDocuments(title, purpose, content);
+    updateDocument(documentDto);
     setIconsInitValue();
     setOpen(false);
   };
@@ -60,10 +65,6 @@ export default function FullScreenEditDocument(props) {
   const handleCloseWithoutSave = () => {
     setOpen(false);
     setIconsInitValue();
-  };
-
-  const dateFormStyle = {
-    "justify-content": "center",
   };
 
   function setIconsInitValue() {
@@ -91,10 +92,18 @@ export default function FullScreenEditDocument(props) {
     } else setPurposeIconDisplay(false);
   }
 
+  const [contentIconDisplay, setContentIconDisplay] = useState(false);
+
+  function onChangeContent(event) {
+    var value = event.target.value;
+    if (value.length > 0) {
+      setContentIconDisplay(true);
+    } else setContentIconDisplay(false);
+  }
+
   function newTag() {
-    console.log('newTag()');
+    console.log("newTag()");
     setOpenNewTag(true);
-    
   }
 
   return (
@@ -127,15 +136,15 @@ export default function FullScreenEditDocument(props) {
               autoFocus
               color="inherit"
               onClick={handleCloseOnSave}
-              disabled={!titleIconDisplay || !purposeIconDisplay}
+              disabled={!titleIconDisplay && !purposeIconDisplay && !contentIconDisplay}
             >
-              SAVE
+              EDIT DOCUMENT
             </Button>
           </Toolbar>
         </AppBar>
         <List>
           <form className={classes.root} noValidate autoComplete="off">
-            <ListItem style={dateFormStyle}>
+            <ListItem style={Styles.dateFormStyle}>
               <TextField
                 id="editDocTitle"
                 label={row.title}
@@ -144,7 +153,7 @@ export default function FullScreenEditDocument(props) {
               {titleIconDisplay && <CheckIcon></CheckIcon>}
             </ListItem>
 
-            <ListItem style={dateFormStyle}>
+            <ListItem style={Styles.dateFormStyle}>
               <TextField
                 id="editDocPurpose"
                 label={row.purpose}
@@ -153,18 +162,23 @@ export default function FullScreenEditDocument(props) {
               {purposeIconDisplay && <CheckIcon></CheckIcon>}
             </ListItem>
 
-            <ListItem style={dateFormStyle}>
-              <TextField id="editDocContent" label={row.content} />
+            <ListItem style={Styles.dateFormStyle}>
+              <TextField 
+              id="editDocContent" 
+              label={row.content}
+              onChange={onChangeContent} />
+              {contentIconDisplay && <CheckIcon></CheckIcon>}
+
             </ListItem>
 
             <div>
-              <ListItem style={dateFormStyle}>
+              <ListItem style={Styles.dateFormStyle}>
                 <Typography variant="h4">TAGS</Typography>
                 <Fab color="primary" aria-label="add" onClick={() => newTag()}>
                   <AddIcon />
                 </Fab>
 
-                { openNewTag && <NewTagsForm></NewTagsForm>}
+                {openNewTag && <NewTagsForm></NewTagsForm>}
               </ListItem>
 
               <TagsArray></TagsArray>
@@ -174,4 +188,20 @@ export default function FullScreenEditDocument(props) {
       </Dialog>
     </div>
   );
+  
+}
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: "relative",
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
+  },
+}));
+
+const Styles = {
+  dateFormStyle : {
+    "justifyContent": "center",
+  },
 }

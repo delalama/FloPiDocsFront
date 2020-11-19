@@ -5,7 +5,7 @@ class DocumentIdAndUserID {
       }
 }
 
-class DocumentIdAndContent {
+class DocumentDto {
     constructor(  id, userId ,title, purpose, content, date) {
         this.id= id;
         this.userId = userId;
@@ -14,4 +14,4 @@ class DocumentIdAndContent {
         this.content= content;
         this.date= date;
       }
-}export {DocumentIdAndUserID, DocumentIdAndContent};
+}export {DocumentIdAndUserID, DocumentDto };

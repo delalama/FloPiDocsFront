@@ -98,6 +98,44 @@ function useDocuments() {
   function clear() {
     setDocuments([]);
   }
+
+  function SaveDocuments(title, purpose, content) {
+    const query =
+      getEndPoint("saveDocument") +
+      localStorage.getItem("userId") +
+      "&title=" +
+      title +
+      "&purpose=" +
+      purpose +
+      "&content=" +
+      content;
+  
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: "saveDocument" }),
+    };
+  
+    fetch(query, requestOptions)
+      .then((response) => response.json())
+      .finally(refresh);
+  }
+  
+  function UpdateDocument(props) {
+    console.log(props)
+    const query =
+      getEndPoint("document");
+  
+    const requestOptions = {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(props),
+    };
+  
+    fetch(query, requestOptions)
+      .then((response) => response.json())
+      .finally(console.log("documentSaved"));
+  }
   return {
     documents,
     searchingDocuments,
@@ -106,6 +144,7 @@ function useDocuments() {
     getDocumentsByText,
     updateDocument,
     deleteDocument,
+    SaveDocuments
   };
 }
 export default useDocuments;
