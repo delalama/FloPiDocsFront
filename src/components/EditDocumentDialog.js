@@ -1,5 +1,5 @@
 import React from "react";
-import useDocuments from '../request/useDocuments';
+import useDocuments from "../request/useDocuments";
 import { withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -10,8 +10,9 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-import {DocumentIdAndContent} from "./../classes/document";
-import Divider from '@material-ui/core/Divider';
+import { DocumentIdAndContent } from "./../classes/document";
+import Divider from "@material-ui/core/Divider";
+import { DocumentsContext } from "../App";
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -58,7 +59,8 @@ const DialogActions = withStyles((theme) => ({
 
 export default function EditDocumentDialog(props) {
   const [open, setOpen] = React.useState(false);
-  const {updateDocument} = useDocuments();
+  const { updateDocument } = useContext(DocumentsContext);
+  // useRef
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -66,16 +68,37 @@ export default function EditDocumentDialog(props) {
   const handleClose = () => {
     const docValues = {
       userId: localStorage.getItem("userId"),
-      id : documentId,
-      titlePost : document.getElementById("titleName").value ===""? title : document.getElementById("titleName").value,
-      purposePost : document.getElementById("purposeValue").value ===""? purpose: document.getElementById("purposeValue").value,
-      contentPost : document.getElementById("contentValue").value ===""? content: document.getElementById("contentValue").value,
-      datePost : date,
-    }
-    const documentValuesChanged = docValues.titlePost !== title || docValues.purposePost !== purpose || docValues.contentPost !== content; 
-    
-    if(documentValuesChanged){
-      updateDocument(new DocumentIdAndContent( docValues.id, docValues.userId, docValues.titlePost, docValues.purposePost, docValues.contentPost, docValues.datePost));
+      id: documentId,
+      titlePost:
+        document.getElementById("titleName").value === ""
+          ? title
+          : document.getElementById("titleName").value,
+      purposePost:
+        document.getElementById("purposeValue").value === ""
+          ? purpose
+          : document.getElementById("purposeValue").value,
+      contentPost:
+        document.getElementById("contentValue").value === ""
+          ? content
+          : document.getElementById("contentValue").value,
+      datePost: date,
+    };
+    const documentValuesChanged =
+      docValues.titlePost !== title ||
+      docValues.purposePost !== purpose ||
+      docValues.contentPost !== content;
+
+    if (documentValuesChanged) {
+      updateDocument(
+        new DocumentIdAndContent(
+          docValues.id,
+          docValues.userId,
+          docValues.titlePost,
+          docValues.purposePost,
+          docValues.contentPost,
+          docValues.datePost
+        )
+      );
     }
     setOpen(false);
   };

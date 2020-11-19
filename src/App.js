@@ -26,6 +26,7 @@ function App() {
     clear,
     getDocumentsByText,
     deleteDocument,
+    updateDocument,
   } = useDocuments();
 
   const search = (prop) => {
@@ -54,6 +55,7 @@ function App() {
               refresh,
               clear,
               deleteDocument,
+              updateDocument,
             }}
           >
             {!showTable && (
