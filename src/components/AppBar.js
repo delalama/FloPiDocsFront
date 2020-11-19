@@ -10,37 +10,35 @@ import SimpleMenu from "./DropDownMenu";
 import { SearchContext } from "./../App";
 import Dictionary from "./StringsFloPi";
 import { AppBarStyles } from "./AppBarStyles.js";
-import Checkbox from '@material-ui/core/Checkbox';
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = AppBarStyles;
 
 export default function SearchAppBar({ refreshTable }) {
   const classes = useStyles();
   const [searchByTitle, setSearchByTitle] = useState(true);
+  const [searchByPurpose, setSearchByPurpose] = useState(false);
+  const [searchByTag, setSearchByTag] = useState(false);
+  const [searchBy, setSearchBy] = useState("TITLE");
+  const [onSearch, setOnSearch] = useState(false);
   const { search } = useContext(SearchContext);
-
 
   function onRefreshTable() {
     refreshTable && refreshTable();
     console.log("refreshing table event");
   }
 
-  useEffect( () => {
+  useEffect(() => {
     setTimeout(() => {
-      search(searchByTitle)
+      search(searchBy);
     }, 100);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[searchByTitle]
-  );
-
-  function checked(){
-    console.log('checkbox checked ');
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchBy]);
 
   return (
     <div className={classes.root}>
       <AppBar position="fixed">
-        <Toolbar className="loggedOptions" >
+        <Toolbar className="loggedOptions">
           <IconButton
             edge="start"
             className={classes.menuButton}
@@ -71,25 +69,50 @@ export default function SearchAppBar({ refreshTable }) {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-              onChange={() => search(searchByTitle)}
+              onChange={() => search(searchBy)}
             />
-            
-
           </div>
           <Checkbox
-              checked={searchByTitle}
-              onChange={ () => setSearchByTitle(true)}
-              inputProps={{ "aria-label": "primary checkbox" }}
-            />
-            <h6>by Title</h6>
-            <Checkbox
-              checked={!searchByTitle}
-              onChange={ () => setSearchByTitle(false)}
-              inputProps={{ "aria-label": "primary checkbox" }}
-            />
-            <h6>by Purpose</h6>
+            checked={searchByTitle}
+            onClick= {() => clickOnSearchByTitle()}
+            inputProps={{ "aria-label": "primary checkbox" }}
+          />
+          <h6>by Title</h6>
+          <Checkbox
+            checked={searchByPurpose}
+            onClick={() => clickOnSearchByPurpose()}
+            inputProps={{ "aria-label": "primary checkbox" }}
+          />
+          <h6>by Purpose</h6>
+          <Checkbox
+            checked={searchByTag}
+            onClick={() => clickOnSearchByTag()}
+            inputProps={{ "aria-label": "primary checkbox" }}
+          />
+          <h6>by Tag</h6>
         </Toolbar>
       </AppBar>
     </div>
   );
+
+  function clickOnSearchByTitle() {
+    console.log('changed title');
+    setSearchByTitle(!searchByTitle);
+    setSearchByPurpose(false);
+    setSearchByTag(false);
+    setSearchBy("TITLE");
+    console.log('searchByEs', searchBy)
+  }
+  function clickOnSearchByPurpose() {
+    setSearchByPurpose(!searchByPurpose);
+    setSearchByTitle(false);
+    setSearchByTag(false);
+    setSearchBy("PURPOSE");
+  }
+  function clickOnSearchByTag() {
+    setSearchByTag(!searchByTag);
+    setSearchByTitle(false);
+    setSearchByPurpose(false);
+    setSearchBy("TAG");
+  }
 }

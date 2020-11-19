@@ -11,6 +11,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import {DocumentIdAndContent} from "./../classes/document";
+import Divider from '@material-ui/core/Divider';
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -113,6 +114,11 @@ export default function EditDocumentDialog(props) {
             </div>
             <div>
               <TextField id="contentValue" label={content} />
+            </div>
+            <Divider></Divider>
+            {/* TODO ACTUAL , importar los tags y mostrarlos para añadir/quitar */}
+            <div>
+              <TextField id="contentValue" label="tags" />
             </div>
           </form>
         </DialogContent>

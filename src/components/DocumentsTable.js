@@ -25,6 +25,7 @@ import "./DocumentsTable.css";
 import { Button } from "@material-ui/core";
 import DeleteDocumentDialogs from "./DeleteDocumentDialogs";
 import EditDocumentDialogs from "./EditDocumentDialog";
+import FullScreenEditDocument from "./editDocument";
 
 const useRowStyles = makeStyles({
   root: {
@@ -70,6 +71,8 @@ Document.propTypes = {
 };
 
 export default function CollapsibleTable({ searching }) {
+  // DEADVID, estos documentos no refrescan desde useDocuments - refresh ?
+  // al crear el context se crean instancias nuevas de las funciones que se declaran?
   const { documents, refresh, searchingDocuments, deleteDocument } = useContext(
     DocumentsContext
   );
@@ -139,7 +142,7 @@ function Document(props) {
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
-  // TODO ACTUAL, tenemos en checkedRowArr los id's de los rows checked, a por las opciones
+  // TODO , tenemos en checkedRowArr los id's de los rows checked, a por las opciones
   function pushCheck(data) {
     setIsChecked(!isChecked);
     let id = data.row.id;
@@ -205,8 +208,8 @@ function Document(props) {
         </TableCell>
         {isChecked && (
           <TableCell>
-            <EditDocumentDialogs
-            row = {documentProps}></EditDocumentDialogs>
+            <FullScreenEditDocument row={documentProps}></FullScreenEditDocument>
+            {/* <EditDocumentDialogs row={documentProps}></EditDocumentDialogs> */}
             <DeleteDocumentDialogs
               documentId={documentProps.id}
             ></DeleteDocumentDialogs>

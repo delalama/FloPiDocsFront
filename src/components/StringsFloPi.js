@@ -11,6 +11,7 @@ const Dictionary = {
     email: 'Email',
     fieldName: 'Field Name',
     fieldValue: 'Field Value',
+    editDocument: 'EDIT DOCUMENT',
 }
 
 export default Dictionary;
