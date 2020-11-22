@@ -25,7 +25,7 @@ function useDocuments() {
   function refresh() {
     setTimeout(() => {
       fetchDocuments();
-    }, 500);
+    }, 100);
   }
 
   function deleteDocument(documentDto) {

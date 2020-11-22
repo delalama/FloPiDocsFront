@@ -13,7 +13,6 @@ function useDocumentFields() {
       .then((response) => response.json())
       .then((response) => {
         setFields(response);
-        console.log(response);
       })
       .finally(() => setSearching(false));
   }

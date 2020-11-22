@@ -63,13 +63,6 @@ export default function LoginForm2({ onUserLogin }) {
 
       // setTimeout( setClose, 500 );
       setClose();
-
-      // // // // visualizar elementos once looged
-      // var arrayOfElements = document.getElementsByClassName("loggedOptions");
-      // var lengthOfArray = arrayOfElements.length;
-      // for (var i = 0; i < lengthOfArray; i++) {
-      //   arrayOfElements[i].style.display = "flex";
-      // }
     } else {
       document.getElementById("loginForm").reset();
     }
@@ -83,22 +76,17 @@ export default function LoginForm2({ onUserLogin }) {
       const email = values.email;
       const password = values.password;
 
-      fetch(query, {
+      const requestOptions = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
-      })
-        .then(function (response) {
-          return response.json();
-        })
-        .then(
-          (response) => resolveQuery(response) //DEADVID, solo ejecturar resolveQuery when 200
-          //   ,(error) => {
-          //     // console.log(error);
-          //   }
-        );
+      }
+
+      fetch(query,requestOptions)
+        .then(function (response) {return response.json();})
+        .then((response) => resolveQuery(response));
     }
   }
 

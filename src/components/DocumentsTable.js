@@ -26,6 +26,7 @@ import { Button } from "@material-ui/core";
 import DeleteDocumentDialogs from "./DeleteDocumentDialogs";
 import EditDocumentDialogs from "./EditDocumentDialog";
 import FullScreenEditDocument from "./editDocument";
+import { useMediaQuery } from "react-responsive";
 
 const useRowStyles = makeStyles({
   root: {
@@ -70,9 +71,27 @@ Document.propTypes = {
   }).isRequired,
 };
 
+//media queries
+const Desktop = ({ children }) => {
+  const isDesktop = useMediaQuery({ minWidth: 992 })
+  return isDesktop ? children : null
+}
+const Tablet = ({ children }) => {
+  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 })
+  return isTablet ? children : null
+}
+const Mobile = ({ children }) => {
+  const isMobile = useMediaQuery({ maxWidth: 767 })
+  return isMobile ? children : null
+}
+const Default = ({ children }) => {
+  const isNotMobile = useMediaQuery({ minWidth: 768 })
+  return isNotMobile ? children : null
+}
+
+
 export default function CollapsibleTable({ searching }) {
-  // DEADVID, estos documentos no refrescan desde useDocuments - refresh ?
-  // al crear el context se crean instancias nuevas de las funciones que se declaran?
+ 
   const { documents, refresh, searchingDocuments, deleteDocument } = useContext(
     DocumentsContext
   );
@@ -105,9 +124,11 @@ export default function CollapsibleTable({ searching }) {
               <TableCell style={Styles.upperTitleColumnNameStyle}>
                 Content
               </TableCell>
-              <TableCell style={Styles.upperTitleColumnNameStyle}>
-                Date
-              </TableCell>
+              <Desktop>
+                <TableCell style={Styles.upperTitleColumnNameStyle}>
+                  Date
+                </TableCell>
+              </Desktop>
               <TableCell></TableCell>
               <TableCell></TableCell>
             </TableRow>
@@ -134,11 +155,8 @@ var checkedRowArr = [];
 function Document(props) {
   const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
   const { row: documentProps } = props;
-  const { fields, searching, refreshFields } = useDocumentFields(
-    documentProps.id
-  );
+  const { fields, searching, refreshFields } = useDocumentFields();
   const [isChecked, setIsChecked] = useState(false);
-
   const [open, setOpen] = React.useState(false);
   const classes = useRowStyles();
 
@@ -194,9 +212,12 @@ function Document(props) {
         <TableCell style={Styles.rowValuesStyle} maxLength="10">
           {documentProps.content}
         </TableCell>
+        <Desktop>
+
         <TableCell style={Styles.rowValuesStyle}>
           {documentProps.date}
         </TableCell>
+        </Desktop>
         <TableCell>
           <FullScreenFieldsCreator
             documentId={documentProps.id}
@@ -207,8 +228,9 @@ function Document(props) {
         </TableCell>
         {isChecked && (
           <TableCell>
-            <FullScreenEditDocument row={documentProps}></FullScreenEditDocument>
-            {/* <EditDocumentDialogs row={documentProps}></EditDocumentDialogs> */}
+            <FullScreenEditDocument
+              row={documentProps}
+            ></FullScreenEditDocument>
             <DeleteDocumentDialogs
               documentId={documentProps.id}
             ></DeleteDocumentDialogs>
@@ -229,13 +251,12 @@ function Document(props) {
 }
 
 function FieldList({ fields, searching, rowId, refreshFields }) {
-  let tableStyle = {
-    marginTop: "3em",
-  };
-
   const classes = useRowStyles();
 
   const styles = {
+    tableStyle: {
+      marginTop: "3em",
+    },
     fieldStyle: {
       color: "black",
       fontFamily: "monospace",

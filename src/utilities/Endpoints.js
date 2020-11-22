@@ -33,6 +33,9 @@ export default function getEndPoint(value) {
       case "findByPurpose":
         endpoint = "/document/findByPurpose";
         break;
+      case "tag":
+        endpoint = "/tag";
+        break;
       case "findByTag":
         endpoint = "/document/findByTag";
         break;

@@ -1,15 +1,14 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import Chip from '@material-ui/core/Chip';
-import Paper from '@material-ui/core/Paper';
-import TagFacesIcon from '@material-ui/icons/TagFaces';
-
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Chip from "@material-ui/core/Chip";
+import Paper from "@material-ui/core/Paper";
+import useTags from "./../request/useTags";
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    justifyContent: 'center',
-    flexWrap: 'wrap',
-    listStyle: 'none',
+    display: "flex",
+    justifyContent: "center",
+    flexWrap: "wrap",
+    listStyle: "none",
     padding: theme.spacing(0.5),
     margin: 0,
   },
@@ -18,38 +17,28 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TagsArray() {
+export default function TagsArray(props) {
   const classes = useStyles();
-  const [chipData, setChipData] = React.useState([
-    { key: 0, label: 'Angular' },
-    { key: 1, label: 'jQuery' },
-    { key: 2, label: 'Polymer' },
-    { key: 3, label: 'React' },
-    { key: 4, label: 'Vue.js' },
-  ]);
+  const { tags, searching, fetch, deleteTagById } = useTags(props.documentTags.id);
 
-  const handleDelete = (chipToDelete) => () => {
-    setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+  const deleteTag = (chipToDelete) => () => {
+    deleteTagById(chipToDelete);
+    console.log("hola");
   };
 
   return (
     <Paper component="ul" className={classes.root}>
-      {chipData.map((data) => {
+      {tags.map((tag) => {
         let icon;
-
-        if (data.label === 'React') {
-          icon = <TagFacesIcon />;
-        }
-
         return (
-          <li key={data.key}>
-            <Chip
-              icon={icon}
-              label={data.label}
-              onDelete={data.label === 'React' ? undefined : handleDelete(data)}
-              className={classes.chip}
-            />
-          </li>
+            <li key={tag.tagId}>
+              <Chip
+                icon={icon}
+                label={tag.tagName}
+                onDelete={deleteTag(tag.tagId)}
+                className={classes.chip} 
+              />
+            </li>
         );
       })}
     </Paper>

@@ -19,19 +19,15 @@ import CheckIcon from "@material-ui/icons/Check";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import NewTagsForm from "./NewTagsForm";
-import {DocumentDto} from "./../classes/document";
-import { DocumentsContext } from '../App';
-
-
+import { DocumentDto } from "./../classes/document";
+import { DocumentsContext } from "../App";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function FullScreenEditDocument(props) {
-  const { updateDocument } = useContext(
-    DocumentsContext
-  );
+  const { updateDocument } = useContext(DocumentsContext);
   const row = props.row;
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -42,20 +38,29 @@ export default function FullScreenEditDocument(props) {
   };
 
   const handleCloseOnSave = () => {
-    const title = document.getElementById("editDocTitle").value===""? row.title: document.getElementById("editDocTitle").value ;
-    const purpose = document.getElementById("editDocPurpose").value===""? row.purpose: document.getElementById("editDocPurpose").value ;
-    const content = document.getElementById("editDocContent").value===""? row.content: document.getElementById("editDocContent").value ;
+    const title =
+      document.getElementById("editDocTitle").value === ""
+        ? row.title
+        : document.getElementById("editDocTitle").value;
+    const purpose =
+      document.getElementById("editDocPurpose").value === ""
+        ? row.purpose
+        : document.getElementById("editDocPurpose").value;
+    const content =
+      document.getElementById("editDocContent").value === ""
+        ? row.content
+        : document.getElementById("editDocContent").value;
 
     console.log(row);
     const documentDto = new DocumentDto(
       row.id,
-      localStorage.getItem('userId'),
+      localStorage.getItem("userId"),
       title,
       purpose,
       content,
       row.date
-    )
-    
+    );
+
     // SaveDocuments(title, purpose, content);
     updateDocument(documentDto);
     setIconsInitValue();
@@ -101,9 +106,9 @@ export default function FullScreenEditDocument(props) {
     } else setContentIconDisplay(false);
   }
 
-  function newTag() {
+  function openAddTag() {
     console.log("newTag()");
-    setOpenNewTag(true);
+    setOpenNewTag(!openNewTag);
   }
 
   return (
@@ -136,7 +141,9 @@ export default function FullScreenEditDocument(props) {
               autoFocus
               color="inherit"
               onClick={handleCloseOnSave}
-              disabled={!titleIconDisplay && !purposeIconDisplay && !contentIconDisplay}
+              disabled={
+                !titleIconDisplay && !purposeIconDisplay && !contentIconDisplay
+              }
             >
               EDIT DOCUMENT
             </Button>
@@ -163,32 +170,38 @@ export default function FullScreenEditDocument(props) {
             </ListItem>
 
             <ListItem style={Styles.dateFormStyle}>
-              <TextField 
-              id="editDocContent" 
-              label={row.content}
-              onChange={onChangeContent} />
+              <TextField
+                id="editDocContent"
+                label={row.content}
+                onChange={onChangeContent}
+              />
               {contentIconDisplay && <CheckIcon></CheckIcon>}
-
             </ListItem>
 
             <div>
               <ListItem style={Styles.dateFormStyle}>
                 <Typography variant="h4">TAGS</Typography>
-                <Fab color="primary" aria-label="add" onClick={() => newTag()}>
-                  <AddIcon />
-                </Fab>
+                {!openNewTag && (
+                  <Fab
+                    color="primary"
+                    aria-label="add"
+                    onClick={() => openAddTag()}
+                  >
+                    <AddIcon />
+                  </Fab>
+                )}
 
-                {openNewTag && <NewTagsForm></NewTagsForm>}
+                {openNewTag && <NewTagsForm documentTags={row}></NewTagsForm>}
+                  
               </ListItem>
-
-              <TagsArray></TagsArray>
+              {/*  TODO ACTUAL, PASAR LOS TAGS POR ARGUMENTO */}
+              <TagsArray documentTags={row}></TagsArray>
             </div>
           </form>
         </List>
       </Dialog>
     </div>
   );
-  
 }
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -201,7 +214,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Styles = {
-  dateFormStyle : {
-    "justifyContent": "center",
+  dateFormStyle: {
+    justifyContent: "center",
   },
-}
+};

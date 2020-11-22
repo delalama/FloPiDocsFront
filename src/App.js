@@ -11,7 +11,7 @@ export const DocumentsContext = createContext({
   clear: () => {},
   searchingDocuments: Boolean,
   deleteDocument: () => {},
-  updateDocument: () => {}
+  updateDocument: () => {},
 });
 
 export const SearchContext = createContext({
@@ -58,7 +58,7 @@ function App() {
               clear,
               deleteDocument,
               updateDocument,
-              SaveDocuments
+              SaveDocuments,
             }}
           >
             {!showTable && (
@@ -67,12 +67,16 @@ function App() {
 
             {showTable && (
               <>
-                <CollapsibleTable searching={searchingDocuments} refresh={()=> refresh()} />
+                <CollapsibleTable
+                  searching={searchingDocuments}
+                  refresh={() => refresh()}
+                />
               </>
             )}
           </DocumentsContext.Provider>
         </div>
       </header>
+      <div></div>
     </div>
   );
 }
