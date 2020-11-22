@@ -62,7 +62,6 @@ export default function EditDialogs(props) {
   const handleClose = () => {
     const fieldName = document.getElementById('fieldName').value;
     const fieldValue = document.getElementById('fieldValue').value;
-    console.log("vamos a editar el field con id " + fieldId);
     setOpen(false);
   };
 

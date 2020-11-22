@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Paper from "@material-ui/core/Paper";
@@ -19,16 +19,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TagsArray(props) {
   const classes = useStyles();
-  const { tags, searching, fetch, deleteTagById } = useTags(props.documentTags.id);
 
   const deleteTag = (chipToDelete) => () => {
-    deleteTagById(chipToDelete);
-    console.log("hola");
+    props.deleteTagById(chipToDelete);
   };
 
   return (
     <Paper component="ul" className={classes.root}>
-      {tags.map((tag) => {
+      {props.tags.map((tag) => {
         let icon;
         return (
             <li key={tag.tagId}>

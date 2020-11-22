@@ -111,7 +111,6 @@ export default function EditDocumentDialog(props) {
 
   return (
     <div>
-      {console.log(props)}
       <Button
         style={Styles.editButtonStyle}
         variant="outlined"

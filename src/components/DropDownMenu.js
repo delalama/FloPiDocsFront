@@ -28,12 +28,10 @@ export default function SimpleMenu() {
   }
 
   function logOut(options) {
-    console.log("LogOut");
     refresh();
   }
 
   function deleteAccount(options) {
-    console.log("deleteAccount");
     refresh();
   }
 

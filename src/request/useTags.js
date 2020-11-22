@@ -36,7 +36,7 @@ function useTags(documentId) {
     .finally(setSearching(true));
   }
 
-  function createTag(tagDto) {
+  async function createTag(tagDto) {
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -44,14 +44,10 @@ function useTags(documentId) {
     };
 
     const query = getEndPoint("tag");
-    console.log(JSON.stringify(tagDto));
 
-    setSearching(true);
-    fetch(query, requestOptions)
+    await fetch(query, requestOptions)
     .then((response) => response.json())
-    .then( v => setTags([])) 
-    // .then( v => setTags( ...tags,v)) 
-    .finally(setSearching(true));
+    .then( v => setTags(tags =>[...tags,v])) 
   }
 
   return { tags, searching, fetch, deleteTagById ,createTag};

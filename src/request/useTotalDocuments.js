@@ -13,7 +13,6 @@ function useTotalDocuments() {
       .then((response) => response.json())
       .then((response) => {
         setCount(response);
-        console.log(response);
       })
       .finally(() => setSearching(false));
   }, []);

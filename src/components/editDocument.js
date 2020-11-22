@@ -21,14 +21,18 @@ import AddIcon from "@material-ui/icons/Add";
 import NewTagsForm from "./NewTagsForm";
 import { DocumentDto } from "./../classes/document";
 import { DocumentsContext } from "../App";
+import useTags from "./../request/useTags";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function FullScreenEditDocument(props) {
-  const { updateDocument } = useContext(DocumentsContext);
   const row = props.row;
+  const { updateDocument } = useContext(DocumentsContext);
+  const { tags, deleteTagById, searching, fetch , createTag } = useTags(props.row.id);
+
+  const [sendTags, setSendTags] = useState(tags); 
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openNewTag, setOpenNewTag] = useState(false);
@@ -51,7 +55,6 @@ export default function FullScreenEditDocument(props) {
         ? row.content
         : document.getElementById("editDocContent").value;
 
-    console.log(row);
     const documentDto = new DocumentDto(
       row.id,
       localStorage.getItem("userId"),
@@ -107,7 +110,6 @@ export default function FullScreenEditDocument(props) {
   }
 
   function openAddTag() {
-    console.log("newTag()");
     setOpenNewTag(!openNewTag);
   }
 
@@ -191,11 +193,11 @@ export default function FullScreenEditDocument(props) {
                   </Fab>
                 )}
 
-                {openNewTag && <NewTagsForm documentTags={row}></NewTagsForm>}
+                {openNewTag && <NewTagsForm createTag={createTag} documentTags={row}></NewTagsForm>}
                   
               </ListItem>
               {/*  TODO ACTUAL, PASAR LOS TAGS POR ARGUMENTO */}
-              <TagsArray documentTags={row}></TagsArray>
+              <TagsArray documentTags={row} tags={tags} deleteTagById={deleteTagById}></TagsArray>
             </div>
           </form>
         </List>

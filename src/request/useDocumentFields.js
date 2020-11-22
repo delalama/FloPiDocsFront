@@ -22,7 +22,6 @@ function useDocumentFields() {
   }, []);
 
   function refreshFields(id) {
-    console.log(id);
     getFields(id);
   }
   return { fields, searching , refreshFields };

@@ -77,7 +77,6 @@ export default function DeleteDocumentDialogs(props) {
     if(safeDeleteActive){
       setOpen(true);
     }else{
-      console.log(props.documentId);
       deleteDocument(new DocumentIdAndUserID(localStorage.getItem("userId"),props.documentId));
     }
   };

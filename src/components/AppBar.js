@@ -25,7 +25,6 @@ export default function SearchAppBar({ refreshTable }) {
 
   function onRefreshTable() {
     refreshTable && refreshTable();
-    console.log("refreshing table event");
   }
 
   useEffect(() => {
@@ -96,12 +95,10 @@ export default function SearchAppBar({ refreshTable }) {
   );
 
   function clickOnSearchByTitle() {
-    console.log('changed title');
     setSearchByTitle(!searchByTitle);
     setSearchByPurpose(false);
     setSearchByTag(false);
     setSearchBy("TITLE");
-    console.log('searchByEs', searchBy)
   }
   function clickOnSearchByPurpose() {
     setSearchByPurpose(!searchByPurpose);

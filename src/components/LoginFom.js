@@ -54,7 +54,6 @@ export default function LoginForm2({ onUserLogin }) {
   }
   // TODO se sigue manteniendo el userId en localStorage la primera vez que se crea el usuario y loguea
   function resolveQuery(response) {
-    console.log(response);
     var userId = response.userId;
     if (userId !== "" && userId !== undefined) {
       localStorage.setItem("userId", userId);

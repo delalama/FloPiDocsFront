@@ -13,7 +13,7 @@ function useDocuments() {
     setSearching(true);
     fetch(query)
       .then((response) => response.json())
-      .then(setDocuments, console.log())
+      .then(setDocuments)
       .finally(() => console.log());
     setSearching(false);
   }
@@ -49,7 +49,6 @@ function useDocuments() {
     console.log("getDocusByText, props: ");
     console.log(props);
     var text = document.getElementById("searchBar").value;
-    console.log(text);
 
     if (text.length > 0) {
       setSearching(true);
@@ -62,13 +61,11 @@ function useDocuments() {
       } else if (props === "TAG") {
         endPoint = getEndPoint("findByTag");
       }
-      console.log(endPoint);
       var params = "?userId=" + userId + "&key=" + text;
       var query = endPoint + params;
-      console.log("buscando");
       fetch(query)
         .then((response) => response.json())
-        .then(setDocuments, console.log())
+        .then(setDocuments)
         .finally(() => setSearching(false));
     } else {
       refresh();

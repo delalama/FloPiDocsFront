@@ -26,13 +26,8 @@ export default function useNewUser() {
     document.getElementById("toogleButton").click();
   }
 
-  function eraseForm(response) {
-    console(response);
-  }
-
   function createNewUser() {
     getNewUserForm(newUserForm);
-    console.log(newUserForm);
     const endPoint = getEndPoint("newUser");
 
     const requestOptions = {
@@ -47,14 +42,11 @@ export default function useNewUser() {
     };
 
     function printError(errorName) {
-      console.log("printError func");
-      console.log(errorName);
       const message = document.getElementById("message");
       message.innerHTML = errorName;
     }
 
     function handleErrors(response) {
-      console.log(response);
       var resStatus = response.status;
       switch (resStatus) {
         case 400:
@@ -77,19 +69,11 @@ export default function useNewUser() {
       .then((res) => res.json())
       .then((data) => {
         nextStep(data);
-        console.log(data);
       })
       .catch((err) => console.log(err))
       .finally();
 
     setSearching(false);
-  }
-
-  function handleResponse(response) {
-    console.log(response);
-    //  if (response.status === 200) {
-    //    hideForm()}
-    //    else eraseForm(response);
   }
 
   function checkEmailAlreadyExists() {

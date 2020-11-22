@@ -12,7 +12,7 @@ export default function deleteField(fieldId){
       };
     
       fetch(query,requestOptions)
-    .then((response) => console.log(response ))
+    .then((response) => response.json() )
     .finally(console.log("field Deleted"));
 
 }
