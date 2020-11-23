@@ -46,8 +46,6 @@ function useDocuments() {
   }
 
   function getDocumentsByText(props) {
-    console.log("getDocusByText, props: ");
-    console.log(props);
     var text = document.getElementById("searchBar").value;
 
     if (text.length > 0) {

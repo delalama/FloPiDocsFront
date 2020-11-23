@@ -30,9 +30,11 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function FullScreenEditDocument(props) {
   const row = props.row;
   const { updateDocument } = useContext(DocumentsContext);
-  const { tags, deleteTagById, searching, fetch , createTag } = useTags(props.row.id);
+  const { tags, deleteTagById, searching, fetch, createTag } = useTags(
+    props.row.id
+  );
 
-  const [sendTags, setSendTags] = useState(tags); 
+  const [sendTags, setSendTags] = useState(tags);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openNewTag, setOpenNewTag] = useState(false);
@@ -179,10 +181,12 @@ export default function FullScreenEditDocument(props) {
               />
               {contentIconDisplay && <CheckIcon></CheckIcon>}
             </ListItem>
+          </form>
 
-            <div>
+            <ListItem style={Styles.dateFormStyle}>
+              <Typography variant="h5">TAGS</Typography>
+            </ListItem>
               <ListItem style={Styles.dateFormStyle}>
-                <Typography variant="h4">TAGS</Typography>
                 {!openNewTag && (
                   <Fab
                     color="primary"
@@ -193,13 +197,19 @@ export default function FullScreenEditDocument(props) {
                   </Fab>
                 )}
 
-                {openNewTag && <NewTagsForm createTag={createTag} documentTags={row}></NewTagsForm>}
-                  
+                {openNewTag && (
+                  <NewTagsForm
+                    createTag={createTag}
+                    documentTags={row}
+                  ></NewTagsForm>
+                )}
               </ListItem>
-              {/*  TODO ACTUAL, PASAR LOS TAGS POR ARGUMENTO */}
-              <TagsArray documentTags={row} tags={tags} deleteTagById={deleteTagById}></TagsArray>
-            </div>
-          </form>
+            {/*  TODO ACTUAL, PASAR LOS TAGS POR ARGUMENTO */}
+            <TagsArray
+              documentTags={row}
+              tags={tags}
+              deleteTagById={deleteTagById}
+            ></TagsArray>
         </List>
       </Dialog>
     </div>

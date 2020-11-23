@@ -39,6 +39,10 @@ function App() {
     setShowTable(true);
   }
 
+  function logOut() {
+    setShowTable(false);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
@@ -48,7 +52,7 @@ function App() {
               search,
             }}
           >
-            {showTable && <AppBar refreshTable={refresh} />}
+            {showTable && <AppBar refreshTable={refresh} logOut={() => logOut()} />}
           </SearchContext.Provider>
 
           <DocumentsContext.Provider

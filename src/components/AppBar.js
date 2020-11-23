@@ -14,7 +14,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = AppBarStyles;
 
-export default function SearchAppBar({ refreshTable }) {
+export default function SearchAppBar({ refreshTable , logOut}) {
   const classes = useStyles();
   const [searchByTitle, setSearchByTitle] = useState(true);
   const [searchByPurpose, setSearchByPurpose] = useState(false);
@@ -45,7 +45,7 @@ export default function SearchAppBar({ refreshTable }) {
             aria-label="open drawer"
           >
             {/* // DEADVID findDOMNode is deprecated in StrictMode. findDOMNode was passed an instance of Transition */}
-            <SimpleMenu></SimpleMenu>
+            <SimpleMenu logOut={() => logOut()}></SimpleMenu>
           </IconButton>
           <div>
             <FullScreenDialog refreshTable={onRefreshTable}></FullScreenDialog>

@@ -9,7 +9,7 @@ import changeOptions from "../request/changeOptions";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
-export default function SimpleMenu() {
+export default function SimpleMenu({logOut}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const { options, searching, refresh } = useGetOptions();
@@ -27,8 +27,8 @@ export default function SimpleMenu() {
     refresh();
   }
 
-  function logOut(options) {
-    refresh();
+  function logOutAction(options) {
+    logOut();
   }
 
   function deleteAccount(options) {
@@ -66,11 +66,7 @@ export default function SimpleMenu() {
           <FormControlLabel
             control={
               <Checkbox
-                // checked={state.safeDelete}
                 checked={options}
-                // DEADVID, quiero entender pk funciona distinto si le paso una función anónima?
-                // de este modo no se ejecuta 1000 veces
-                // onChange={ () => handleChangeSafeDelete(options)}
                 onChange={() => safeDeleteClick(options)}
                 name="checkedB"
                 color="primary"
@@ -81,12 +77,11 @@ export default function SimpleMenu() {
         </MenuItem>
         <MenuItem> ----------------</MenuItem>
 
-        {/* ------------------------------ */}
         <div></div>
         <MenuItem
           onClick={() => {
-            handleClose();
-            logOut(options);
+            logOutAction();
+            // handleClose();
           }}
         >
           <ExitToAppIcon></ExitToAppIcon>
@@ -105,7 +100,6 @@ export default function SimpleMenu() {
           Delete Account
         </MenuItem>
         <MenuItem> ----------------</MenuItem>
-
       </Menu>
     </div>
   );
