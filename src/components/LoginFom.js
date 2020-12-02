@@ -1,5 +1,5 @@
 import React, { useState, createContext, useCallback, useEffect } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles, StylesProvider, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import useFetch, { Provider } from "use-http";
@@ -9,6 +9,8 @@ import isBirel from "../utilities/isBirel";
 import Dictionary from "./StringsFloPi";
 import Divider from "@material-ui/core/Divider";
 import Image from "material-ui-image";
+import Container from 'react-bootstrap/Container';
+import { Height } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -49,18 +51,16 @@ export default function LoginForm2({ onUserLogin }) {
   };
 
   function setClose(userId) {
-    // DEAD!!
     onUserLogin && onUserLogin(userId);
   }
-  // TODO se sigue manteniendo el userId en localStorage la primera vez que se crea el usuario y loguea
+
+
   function resolveQuery(response) {
     var userId = response.userId;
     if (userId !== "" && userId !== undefined) {
       localStorage.setItem("userId", userId);
       var firstName = response.firstName;
       localStorage.setItem("userName", firstName);
-
-      // setTimeout( setClose, 500 );
       setClose();
     } else {
       document.getElementById("loginForm").reset();
@@ -102,12 +102,9 @@ export default function LoginForm2({ onUserLogin }) {
           toogleForm,
         }}
       >
-        {/* <div>
-        <h1 style={{ color: "red", fontSize: "4em" }}>{Dictionary.appName}</h1>
-      </div> */}
-
+        <Container>
         <div>
-          <Image src={require("./../images/5.png")} />
+          <Image aspectRatio="3/1" src={require("./../images/5.png")} />
         </div>
 
         <div style={messageStyle}>
@@ -152,7 +149,15 @@ export default function LoginForm2({ onUserLogin }) {
           </form>
         )}
         {!toogleFormsDisplay && <NewUserForm></NewUserForm>}
+        </Container>
       </LoginFormContext.Provider>
     </div>
   );
+}
+const Styles = {
+  floPiPic:{
+    width: "33%",
+    height: "33%", 
+
+  }
 }

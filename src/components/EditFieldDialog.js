@@ -1,5 +1,6 @@
-import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import React, { useState } from "react";
+import { FieldDto } from "../classes/Field";
+import { StylesProvider, withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -9,6 +10,8 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import UpdateFields from "./../request/useSaveFields";
+import useSaveFields from '../request/useSaveFields';
 const styles = (theme) => ({
   root: {
     margin: 0,
@@ -54,32 +57,49 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function EditDialogs(props) {
-  const [open, setOpen] = React.useState(false);
+  const {fieldId, fieldName: preFieldName, fieldValue:preFieldValue, fieldPicture: preFieldPicture}= props;
+ 
+  const [open, setOpen] = useState(false);
+  const {UpdateFields} = useSaveFields();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
-    const fieldName = document.getElementById('fieldName').value;
-    const fieldValue = document.getElementById('fieldValue').value;
     setOpen(false);
   };
 
-  const fieldId = props.fieldId;
-  const fieldName = props.fieldName;
-  const fieldValue = props.fieldValue;
+
+  const handleCloseOnEdit = () => {
+    let fieldName = document.getElementById("fieldName").value;
+    let fieldValue = document.getElementById("fieldValue").value;
+
+    let fieldNameEmpty = fieldName === "";
+    let fieldValueEmpty = fieldValue === "";
+
+    fieldNameEmpty ? (fieldName = preFieldName) : (fieldName = fieldName);
+    fieldValueEmpty ? (fieldValue = preFieldValue) : (fieldValue = fieldValue);
+
+    const fieldDTO = new FieldDto(fieldId, fieldName, fieldValue);
+    console.log(fieldDTO);
+
+    UpdateFields(fieldDTO);
+    setTimeout( () =>{ props.refreshFields && props.refreshFields(); }, 100);
+    setOpen(false);
+  };
 
   const editButtonStyle = {
-    color: 'white',
-    background: '#3f51b5',
+    color: "white",
+    background: "#3f51b5",
   };
 
-  const arrowStyle = {
-    fill: "blue",
-  };
   return (
     <div>
-      <Button style={editButtonStyle} variant="outlined" onClick={handleClickOpen}>
+      <Button
+        style={editButtonStyle}
+        variant="outlined"
+        onClick={handleClickOpen}
+      >
         EDIT
       </Button>
       <Dialog
@@ -87,21 +107,34 @@ export default function EditDialogs(props) {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
+      setOpen(false);
+    };
+  
+    const fieldId = props.fieldId;
+    const preFieldName = props.fieldName;
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Edit screen
         </DialogTitle>
         <DialogContent dividers>
-          <form  noValidate autoComplete="off">
-            <TextField id="fieldName" label={fieldName} />
-            <TextField id="fieldValue" label={fieldValue} />
+          <form noValidate autoComplete="off">
+            <TextField id="fieldName" label={preFieldName} />
+            <TextField id="fieldValue" label={preFieldValue} />
+            <img src={preFieldPicture} style={Styles.Picture}/>
           </form>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={handleClose} color="secondary">
+          <Button autoFocus onClick={() => handleCloseOnEdit()} color="secondary">
             EDIT
           </Button>
         </DialogActions>
       </Dialog>
     </div>
   );
+
+}
+
+const Styles = {
+  Picture: {
+    width: "20vw"
+  }
 }

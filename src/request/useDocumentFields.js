@@ -4,8 +4,7 @@ import getEndPoint from "../utilities/Endpoints";
 function useDocumentFields() {
   const [searching, setSearching] = useState(false);
   const [fields, setFields] = useState([]);
-
-  
+ 
   function getFields(id) {
     const query = getEndPoint("getFieldsByDocumentId") + id;
     setSearching(true);
@@ -16,6 +15,22 @@ function useDocumentFields() {
       })
       .finally(() => setSearching(false));
   }
+  
+  async function exportDocument(id) {
+    const query = getEndPoint("exportDocument") + id;
+    let pdf = Blob ;
+    setSearching(true);
+    await fetch(query)
+    .then(response => {
+      response.blob().then(blob => {
+        let url = window.URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "flopidoc.pdf";
+        a.click();
+    });
+  })
+  }
 
   useEffect(() => {
     getFields();
@@ -24,6 +39,6 @@ function useDocumentFields() {
   function refreshFields(id) {
     getFields(id);
   }
-  return { fields, searching , refreshFields };
+  return { fields, searching , refreshFields, exportDocument };
 }
 export default useDocumentFields;

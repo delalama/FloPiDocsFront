@@ -13,20 +13,19 @@ import Paper from "@material-ui/core/Paper";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import useDocumentFields from "../request/useDocumentFields";
-import TablePaginationDemo from "./TablePagination";
 import DeleteFieldDialogs from "./DeleteFieldDialogs";
 import EditDialogs from "./EditFieldDialog";
 import TableCheckboxLabels from "./tableCheckbox";
 import { DocumentsContext } from "./../App";
 import CircularIndeterminate from "./CircularIndeterminate";
-import AddTooltip from "./ToolTip";
 import FullScreenFieldsCreator from "./FullScreenFieldsCreator";
 import "./DocumentsTable.css";
-import { Button } from "@material-ui/core";
 import DeleteDocumentDialogs from "./DeleteDocumentDialogs";
-import EditDocumentDialogs from "./EditDocumentDialog";
-import FullScreenEditDocument from "./editDocument";
+import FullScreenEditDocument from "./FullScreenEditDocument";
 import { useMediaQuery } from "react-responsive";
+import Zoom from "react-medium-image-zoom";
+import ExportButton from "./ExportButton";
+import "react-medium-image-zoom/dist/styles.css";
 
 const useRowStyles = makeStyles({
   root: {
@@ -36,25 +35,24 @@ const useRowStyles = makeStyles({
   },
 });
 
-function createData(id, title, purpose, content, date) {
+function createData(id, title, purpose, date) {
   return {
     id,
     title,
     purpose,
-    content,
     date,
   };
 }
 
-function createField(id, fieldName, fieldValue) {
+function createField(id, fieldName, fieldValue, fieldPicture) {
   return {
     id,
     fieldName,
     fieldValue,
+    fieldPicture,
   };
 }
 
-// TODO SELECCIÓN DE DOCUMENTOS PARA MOSTRAR OPCIONES DE EXPORTACIÓN
 const checkedDocumentsArray = [];
 
 Document.propTypes = {
@@ -71,100 +69,96 @@ Document.propTypes = {
   }).isRequired,
 };
 
-//media queries
 const Desktop = ({ children }) => {
-  const isDesktop = useMediaQuery({ minWidth: 992 })
-  return isDesktop ? children : null
-}
-const Tablet = ({ children }) => {
-  const isTablet = useMediaQuery({ minWidth: 768, maxWidth: 991 })
-  return isTablet ? children : null
-}
-const Mobile = ({ children }) => {
-  const isMobile = useMediaQuery({ maxWidth: 767 })
-  return isMobile ? children : null
-}
-const Default = ({ children }) => {
-  const isNotMobile = useMediaQuery({ minWidth: 768 })
-  return isNotMobile ? children : null
-}
+  const isDesktop = useMediaQuery({ minWidth: 992 });
+  return isDesktop ? children : null;
+};
 
+const MobileVertical = ({ children }) => {
+  const MobileVertical = useMediaQuery({ maxWidth: 550 });
+  return MobileVertical ? children : null;
+};
 
-export default function CollapsibleTable({ searching }) {
- 
+export default function MainTable({ searching }) {
   const { documents, refresh, searchingDocuments, deleteDocument } = useContext(
     DocumentsContext
   );
-
   const { refreshTableState, setRefresh } = useState(false);
+
+  const isMobileVertical = useMediaQuery({ maxWidth: 550 });
 
   useEffect(() => {
     refresh();
   }, [refreshTableState]);
 
+  const emptyDocuments = documents.length === 0;
+
   return (
     <div>
+      {emptyDocuments && <h6 style={Styles.message}>NO DOCUMENT</h6>}
+
+      {isMobileVertical && (
+        <h6 style={Styles.message}>PLEASE TURN YOUR DEVICE HORIZONTAL</h6>
+      )}
+      {/* TODO , NO FUNCIONA EL SPINNER */}
       {searchingDocuments && <CircularIndeterminate></CircularIndeterminate>}
-      <TableContainer
-        style={Styles.tableStyle}
-        component={Paper}
-        id="documentsTable"
-      >
-        <Table aria-label="collapsible table">
-          <TableHead style={Styles.tableHeadStyle}>
-            <TableRow>
-              <TableCell id="selectColumn"></TableCell>
-              <TableCell></TableCell>
-              <TableCell style={Styles.upperTitleColumnNameStyle}>
-                Title{" "}
-              </TableCell>
-              <TableCell style={Styles.upperTitleColumnNameStyle}>
-                Purpose
-              </TableCell>
-              <TableCell style={Styles.upperTitleColumnNameStyle}>
-                Content
-              </TableCell>
-              <Desktop>
+      {!emptyDocuments && !isMobileVertical && (
+        <TableContainer
+          style={Styles.tableStyle}
+          component={Paper}
+          id="documentsTable"
+        >
+          <Table aria-label="collapsible table">
+            <TableHead style={Styles.tableHeadStyle}>
+              <TableRow>
+                <TableCell id="selectColumn"></TableCell>
+                <TableCell></TableCell>
                 <TableCell style={Styles.upperTitleColumnNameStyle}>
-                  Date
+                  Title
                 </TableCell>
-              </Desktop>
-              <TableCell></TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          {!refreshTableState && (
-            <TableBody style={Styles.tableBodyStyle}>
-              {documents
-                ?.map(({ id, title, purpose, content, date }) =>
-                  createData(id, title, purpose, content, date)
-                )
-                .map((row, index) => (
-                  <Document key={row.id} row={row} />
-                ))}
-            </TableBody>
-          )}
-        </Table>
-        <TablePaginationDemo></TablePaginationDemo>
-      </TableContainer>
+                <TableCell style={Styles.upperTitleColumnNameStyle}>
+                  Purpose
+                </TableCell>
+                <Desktop>
+                  <TableCell style={Styles.upperTitleColumnNameStyle}>
+                    Date
+                  </TableCell>
+                </Desktop>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
+              </TableRow>
+            </TableHead>
+            {!refreshTableState && (
+              <TableBody style={Styles.tableBodyStyle}>
+                {documents
+                  ?.map(({ id, title, purpose, date }) =>
+                    createData(id, title, purpose, date)
+                  )
+                  .map((row, index) => (
+                    <Document key={row.id} row={row} />
+                  ))}
+              </TableBody>
+            )}
+          </Table>
+          {/* <TablePaginationDemo documents={documents}></TablePaginationDemo> */}
+        </TableContainer>
+      )}
     </div>
   );
 }
 var checkedRowArr = [];
 
 function Document(props) {
-  const [selectedDocumentId, setSelectedDocumentId] = React.useState(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState(null);
   const { row: documentProps } = props;
-  const { fields, searching, refreshFields } = useDocumentFields();
-  const [isChecked, setIsChecked] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const { fields, searching, refreshFields ,exportDocument } = useDocumentFields();
+  const [open, setOpen] = useState(false);
   const classes = useRowStyles();
-
+  const [isChecked, setIsChecked] = useState(false);
   function pushCheck(data) {
     setIsChecked(!isChecked);
     let id = data.row.id;
     var index = checkedRowArr.findIndex((v) => v === id);
-
     index === -1 ? checkedRowArr.push(id) : checkedRowArr.splice(index, 1);
   }
 
@@ -209,14 +203,10 @@ function Document(props) {
         <TableCell style={Styles.rowValuesStyle} maxLength="12">
           {documentProps.purpose}
         </TableCell>
-        <TableCell style={Styles.rowValuesStyle} maxLength="10">
-          {documentProps.content}
-        </TableCell>
         <Desktop>
-
-        <TableCell style={Styles.rowValuesStyle}>
-          {documentProps.date}
-        </TableCell>
+          <TableCell style={Styles.rowValuesStyle}>
+            {documentProps.date}
+          </TableCell>
         </Desktop>
         <TableCell>
           <FullScreenFieldsCreator
@@ -226,16 +216,19 @@ function Document(props) {
             }
           />
         </TableCell>
-        {isChecked && (
-          <TableCell>
-            <FullScreenEditDocument
-              row={documentProps}
-            ></FullScreenEditDocument>
-            <DeleteDocumentDialogs
-              documentId={documentProps.id}
-            ></DeleteDocumentDialogs>
-          </TableCell>
-        )}
+        <TableCell>
+          {isChecked && (
+            <>
+              <FullScreenEditDocument
+                row={documentProps}
+              ></FullScreenEditDocument>
+              <ExportButton documentId={documentProps.id}></ExportButton>
+              <DeleteDocumentDialogs
+                documentId={documentProps.id}
+              ></DeleteDocumentDialogs>
+            </>
+          )}
+        </TableCell>
       </TableRow>
 
       {selectedDocumentId && open && (
@@ -252,57 +245,32 @@ function Document(props) {
 
 function FieldList({ fields, searching, rowId, refreshFields }) {
   const classes = useRowStyles();
-
-  const styles = {
-    tableStyle: {
-      marginTop: "3em",
-    },
-    fieldStyle: {
-      color: "black",
-      fontFamily: "monospace",
-      fontSize: "1em",
-      textAlign: "center",
-      whiteSpace: "nowrap",
-      textOverflow: "ellipsis",
-      overflow: "hidden",
-      maxWidth: "15vw",
-    },
-  };
-
-  function mouseOverField(e) {
-    e.target.style.whiteSpace = "normal";
-  }
-  function mouseLeaveField(e) {
-    e.target.style.whiteSpace = "nowrap";
-  }
-
+  const [toggler, setToggler] = useState(false);
+  const imagesArray = [];
   return (
     <React.Fragment>
-      {/* {searching && <CircularIndeterminate></CircularIndeterminate>} */}
       {fields
-        ?.map(({ id, fieldName, fieldValue }) =>
-          createField(id, fieldName, fieldValue)
+        ?.map(({ id, fieldName, fieldValue, fieldPicture }) =>
+          createField(id, fieldName, fieldValue, fieldPicture)
         )
         .map((field, index) => (
           <TableRow key={field.id} className={classes.root}>
             <TableCell></TableCell>
-            <TableCell
-              onMouseOver={mouseOverField}
-              onMouseLeave={mouseLeaveField}
-              colSpan="2"
-              style={styles.fieldStyle}
-            >
-              {" "}
+            <TableCell colSpan="2" style={Styles.fieldStyle}>
               {field.fieldName}
             </TableCell>
-            <TableCell
-              onMouseOver={mouseOverField}
-              onMouseLeave={mouseLeaveField}
-              colSpan="2"
-              style={styles.fieldStyle}
-            >
-              {" "}
-              {field.fieldValue}
+            {field.fieldValue !== null && (
+              <TableCell colSpan="2" style={Styles.fieldStyle}>
+                {field.fieldValue}
+              </TableCell>
+            )}
+
+            <TableCell colSpan="1" style={Styles.fieldStyle}>
+              {/* <img src={field.fieldPicture} style={Styles.pictureStyle} /> */}
+
+              <Zoom>
+                <img src={field.fieldPicture} style={Styles.pictureStyle} />
+              </Zoom>
             </TableCell>
 
             <TableCell>
@@ -310,6 +278,8 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
                 fieldId={field.id}
                 fieldName={field.fieldName}
                 fieldValue={field.fieldValue}
+                fieldPicture={field.fieldPicture}
+                refreshFields={() => refreshFields(rowId)}
               ></EditDialogs>
             </TableCell>
             <TableCell>
@@ -332,8 +302,8 @@ const Styles = {
     textAlign: "center",
     whiteSpace: "nowrap",
     textOverFlow: "ellipsis",
-    overflow: "hidden",
-    width: "50px",
+    overflow: "overlay",
+    maxWidth: "25vw",
   },
   tableStyle: {
     marginTop: "4em",
@@ -347,5 +317,20 @@ const Styles = {
   upperTitleColumnNameStyle: {
     textAlign: "center",
     fontWeight: "bold",
+  },
+  message: {
+    color: "black",
+  },
+  pictureStyle: {
+    width: "5vw",
+  },
+  fieldStyle: {
+    color: "black",
+    fontFamily: "monospace",
+    fontSize: "1em",
+    textAlign: "center",
+    whiteSpace: "nowrap",
+    overflow: "overlay",
+    maxWidth: "25vw",
   },
 };

@@ -1,11 +1,9 @@
-import React , {useState, useContext} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
-import ListItemText from "@material-ui/core/ListItemText";
 import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
-import Divider from "@material-ui/core/Divider";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
@@ -14,11 +12,9 @@ import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
 import StringsFloPi from "./StringsFloPi";
 import TextField from "@material-ui/core/TextField";
-import SaveFields from "../request/useSaveFields";
-import CheckIcon from '@material-ui/icons/Check';
-import AddTooltip from "./ToolTip";
-import {FieldsContext} from "./DocumentsTable";
-import useDocumentFields from "./../request/useDocumentFields";
+import useSaveFields from "../request/useSaveFields";
+import CheckIcon from "@material-ui/icons/Check";
+import ImageUploaderComponent from "./ImageUploader";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -34,79 +30,107 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-
-
-export default function FullScreenFieldsCreator({documentId, refreshFieldsFromFieldsCreator}) {
- 
+export default function FullScreenFieldsCreator({
+  documentId,
+  refreshFieldsFromFieldsCreator,
+}) {
+  const { save, savePicture } = useSaveFields();
   const documentid = documentId;
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [fieldValueDisplay, setFieldValueDisplay] = useState(true);
+  const [pictureRaw, setPictureRaw] = useState();
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleCloseOnSave = () => {
-    const fieldName = document.getElementById('newFieldName').value;
-    const fieldValue = document.getElementById('newFieldValue').value;
+    if (fieldValueDisplay) {
+      saveSimpleField();
+    } else {
+      savePictureField();
+    }
+  };
 
-    SaveFields(fieldName,fieldValue, documentid);
+  function savePictureField() {
+    const fieldName = document.getElementById("newFieldName").value;
+    const picture = pictureRaw;
+
+    savePicture(fieldName, picture, documentid);
+    afterSave();
+  }
+
+  
+  function saveSimpleField() {
+    const fieldName = document.getElementById("newFieldName").value;
+    const fieldValue = document.getElementById("newFieldValue").value;
+
+    save(fieldName, fieldValue, documentid);
+    afterSave();
+  }
+
+  function afterSave() {
     setIconsInitValue();
     // DEADVID, no entiendo esta nomenclatura
     setTimeout(() => {
-      refreshFieldsFromFieldsCreator && refreshFieldsFromFieldsCreator();  
+      refreshFieldsFromFieldsCreator && refreshFieldsFromFieldsCreator();
     }, 10);
-    
+    setFieldValueDisplay(true);
     // refreshTable && refreshTable(true);
     setOpen(false);
-  };
+  }
 
   const handleCloseWithoutSave = () => {
     setOpen(false);
     setIconsInitValue();
+    setFieldValueDisplay(true);
   };
 
   const dateFormStyle = {
-    'justify-content' : 'center',
+    justifyContent: "center",
+  };
+
+  function setIconsInitValue() {
+    setNameIconDisplay(false);
+    setValueIconDisplay(false);
   }
 
-  function setIconsInitValue(){
-      setTitleIconDisplay(false);
-      setPurposeIconDisplay(false);
-  }
+  const [nameIconDisplay, setNameIconDisplay] = useState(false);
 
-  const [titleIconDisplay, setTitleIconDisplay] = useState(false);
-
-  function onChangeFieldName(event){
+  function onChangeFieldName(event) {
     var value = event.target.value;
-    if(value.length > 0) { 
-      setTitleIconDisplay(true);
+    if (value.length > 0) {
+      setNameIconDisplay(true);
     } else {
-      setTitleIconDisplay(false);
+      setNameIconDisplay(false);
     }
   }
- 
 
-  const [purposeIconDisplay, setPurposeIconDisplay] = useState(false);
+  const [valueIconDisplay, setValueIconDisplay] = useState(false);
 
-  function onChangeFieldValue(event){
+  function onChangeFieldValue(event) {
     var value = event.target.value;
-    if( value.length > 0 ) {
-      setPurposeIconDisplay(true);
-    } else setPurposeIconDisplay(false);
+    if (value.length > 0) {
+      setValueIconDisplay(true);
+    } else setValueIconDisplay(false);
   }
 
+  function onUploadImage() {
+    setFieldValueDisplay(false);
+    setValueIconDisplay(true);
+    setPictureRaw(
+      document.getElementsByClassName("uploadPictureContainer")[0].children[1]
+        .src
+    );
+  }
 
   return (
     <div>
       <Button variant="contained" onClick={handleClickOpen}>
         {StringsFloPi.newField}
       </Button>
-      
-{/*     DEADVID , se puede pasar este ONCLICK a este TOOLTIP??? 
-      <AddTooltip onClick={handleClickOpen}> 
-      </AddTooltip> 
- */}
+
       <Dialog
         fullScreen
         open={open}
@@ -126,10 +150,14 @@ export default function FullScreenFieldsCreator({documentId, refreshFieldsFromFi
             <Typography variant="h6" className={classes.title}>
               {StringsFloPi.newField}
             </Typography>
-            <Typography variant="h6" className={classes.title}>
-              {documentid}
-            </Typography>
-            <Button id='saveButton' autoFocus color="inherit" onClick={handleCloseOnSave} disabled={!titleIconDisplay || !purposeIconDisplay}>
+            <Typography variant="h6" className={classes.title}></Typography>
+            <Button
+              id="saveButton"
+              autoFocus
+              color="inherit"
+              onClick={handleCloseOnSave}
+              disabled={!nameIconDisplay || !valueIconDisplay}
+            >
               SAVE
             </Button>
           </Toolbar>
@@ -137,15 +165,29 @@ export default function FullScreenFieldsCreator({documentId, refreshFieldsFromFi
         <List>
           <form className={classes.root} noValidate autoComplete="off">
             <ListItem style={dateFormStyle}>
-            <TextField id="newFieldName" label={StringsFloPi.fieldName} onChange={onChangeFieldName}/>
-            {titleIconDisplay && <CheckIcon></CheckIcon>}
-          </ListItem>
+              <TextField
+                id="newFieldName"
+                label={StringsFloPi.fieldName}
+                onChange={onChangeFieldName}
+              />
+              {nameIconDisplay && <CheckIcon></CheckIcon>}
+            </ListItem>
 
+            {fieldValueDisplay && (
+              <ListItem style={dateFormStyle}>
+                <TextField
+                  id="newFieldValue"
+                  label={StringsFloPi.fieldValue}
+                  onChange={onChangeFieldValue}
+                />
+                {valueIconDisplay && <CheckIcon></CheckIcon>}
+              </ListItem>
+            )}
             <ListItem style={dateFormStyle}>
-            <TextField id="newFieldValue" label={StringsFloPi.fieldValue} onChange={onChangeFieldValue}/>
-            {purposeIconDisplay && <CheckIcon></CheckIcon>}
-          </ListItem>
-
+              <ImageUploaderComponent
+                onUploadImage={() => onUploadImage()}
+              ></ImageUploaderComponent>
+            </ListItem>
           </form>
         </List>
       </Dialog>

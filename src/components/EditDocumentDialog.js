@@ -138,7 +138,6 @@ export default function EditDocumentDialog(props) {
               <TextField id="contentValue" label={content} />
             </div>
             <Divider></Divider>
-            {/* TODO ACTUAL , importar los tags y mostrarlos para añadir/quitar */}
             <div>
               <TextField id="contentValue" label="tags" />
             </div>

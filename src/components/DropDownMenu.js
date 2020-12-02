@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -6,13 +6,15 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import useGetOptions from "./../request/useGetOptions";
 import changeOptions from "../request/changeOptions";
+import useUsers from '../request/useUsers';
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 
 export default function SimpleMenu({logOut}) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
+  const [anchorEl, setAnchorEl] = useState(null);
+  const {deleteUserAccount} = useUsers();
   const { options, searching, refresh } = useGetOptions();
+  const userName= localStorage.getItem("userName");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -27,12 +29,13 @@ export default function SimpleMenu({logOut}) {
     refresh();
   }
 
-  function logOutAction(options) {
+  function logOutAction() {
     logOut();
   }
 
-  function deleteAccount(options) {
-    refresh();
+  function deleteAccount() {
+    deleteUserAccount();
+    logOut();
   }
 
   const handleChangeSafeDelete = (event) => {
@@ -44,7 +47,7 @@ export default function SimpleMenu({logOut}) {
   };
 
   return (
-    <div>
+    <div >
       <Button
         aria-controls="simple-menu"
         aria-haspopup="true"
@@ -61,7 +64,12 @@ export default function SimpleMenu({logOut}) {
         onClose={handleClose}
       >
         <div></div>
+        <MenuItem>{userName}</MenuItem>
+        <MenuItem> ----------------</MenuItem>
+
         <MenuItem> Account Options</MenuItem>
+
+
         <MenuItem onClick={handleClose}>
           <FormControlLabel
             control={

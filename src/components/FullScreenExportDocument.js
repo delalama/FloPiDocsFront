@@ -19,22 +19,21 @@ import CheckIcon from "@material-ui/icons/Check";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import NewTagsForm from "./NewTagsForm";
-import { DocumentDto } from "./../classes/document";
+import { DocumentDto } from "../classes/document";
 import { DocumentsContext } from "../App";
-import useTags from "./../request/useTags";
+import useTags from "../request/useTags";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenEditDocument(props) {
+export default function FullScreenExportDocument(props) {
   const row = props.row;
   const { updateDocument } = useContext(DocumentsContext);
-  const { tags, deleteTagById, searching, fetch, createTag } = useTags(
-    props.row.id
-  );
+  // const { tags, deleteTagById, searching, fetch, createTag } = useTags(
+  //   props.row.id
+  // );
 
-  const [sendTags, setSendTags] = useState(tags);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openNewTag, setOpenNewTag] = useState(false);
@@ -117,8 +116,9 @@ export default function FullScreenEditDocument(props) {
 
   return (
     <div>
+      {console.log(props.fields)}
       <Button variant="contained" onClick={handleClickOpen}>
-        EDIT
+        EXPORT
       </Button>
 
       <Dialog
@@ -156,30 +156,7 @@ export default function FullScreenEditDocument(props) {
         <List>
           <form className={classes.root} noValidate autoComplete="off">
             <ListItem style={Styles.dateFormStyle}>
-              <TextField
-                id="editDocTitle"
-                label={row.title}
-                onChange={onChangeTitle}
-              />
-              {titleIconDisplay && <CheckIcon></CheckIcon>}
-            </ListItem>
-
-            <ListItem style={Styles.dateFormStyle}>
-              <TextField
-                id="editDocPurpose"
-                label={row.purpose}
-                onChange={onChangePurpose}
-              />
-              {purposeIconDisplay && <CheckIcon></CheckIcon>}
-            </ListItem>
-
-            <ListItem style={Styles.dateFormStyle}>
-              <TextField
-                id="editDocContent"
-                label={row.content}
-                onChange={onChangeContent}
-              />
-              {contentIconDisplay && <CheckIcon></CheckIcon>}
+              
             </ListItem>
           </form>
 
@@ -197,19 +174,8 @@ export default function FullScreenEditDocument(props) {
                   </Fab>
                 )}
 
-                {openNewTag && (
-                  <NewTagsForm
-                    createTag={createTag}
-                    documentTags={row}
-                  ></NewTagsForm>
-                )}
               </ListItem>
-            {/*  TODO ACTUAL, PASAR LOS TAGS POR ARGUMENTO */}
-            <TagsArray
-              documentTags={row}
-              tags={tags}
-              deleteTagById={deleteTagById}
-            ></TagsArray>
+            
         </List>
       </Dialog>
     </div>

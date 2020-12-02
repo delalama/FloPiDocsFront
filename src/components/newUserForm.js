@@ -15,7 +15,6 @@ import CircularIndeterminate from "./CircularIndeterminate";
 const useStyles = newUserFormStyles;
 
 export default function NewUserForm() {
-  //styles and context
   const newUserFormclasses = useStyles();
   const [
     displayNewUserFormSendButton,
@@ -25,7 +24,7 @@ export default function NewUserForm() {
   var { toogleForm } = useContext(LoginFormContext);
 
   function checkChecksStatus() {
-    // TODO useRed
+    // TODO useRef
     var firstNameCheckIcon =
       document.getElementById("newUserFirstNameOkIcon").style.display ===
       "inline-block";
@@ -95,7 +94,7 @@ export default function NewUserForm() {
     document.getElementById("newUserPasswordOkIcon").style.display = "none";
   }
 
-  const { response, searching, createUser, showSpinner } = useNewUser();
+  const {  createUser, showSpinner } = useNewUser();
 
   return (
     <List>
@@ -158,7 +157,7 @@ export default function NewUserForm() {
         <div>
           <Button
             color="primary"
-            className={newUserFormclasses.sendButton}
+            style={Styles.toogleButton}
             onClick={() => createUser()}
           >
             NEW USER
@@ -168,7 +167,7 @@ export default function NewUserForm() {
 
       <Button
         id="toogleButton"
-        className={newUserFormclasses.resetButton}
+        style={Styles.toogleButton}
         color="primary"
         onClick={() => resetForm()}
       >
@@ -176,7 +175,7 @@ export default function NewUserForm() {
       </Button>
       <Button
         id="toogleButton"
-        className={newUserFormclasses.toogleButton}
+        style={Styles.toogleButton}
         color="primary"
         onClick={() => toogleForm()}
       >
@@ -184,4 +183,12 @@ export default function NewUserForm() {
       </Button>
     </List>
   );
+
 }
+    const Styles = {
+      toogleButton: {
+        background: "#3f51b5",
+        color: "White",
+        marginRight: "1em",
+      }
+    }

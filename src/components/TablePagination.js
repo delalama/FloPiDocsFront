@@ -1,12 +1,10 @@
-import React from 'react';
-import TablePagination from '@material-ui/core/TablePagination';
-import useTotalDocuments from '../request/useTotalDocuments';
+import React, { useState } from "react";
+import TablePagination from "@material-ui/core/TablePagination";
+import useTotalDocuments from "../request/useTotalDocuments";
 
-function TablePaginationDemo() {
-  const [page, setPage] = React.useState(2);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  //DEADVID , object is not a function......??
-//   const [totalDocuments, setTotalDocuments] = useTotalDocuments();  
+function TablePaginationDemo({ documents }) {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -17,21 +15,25 @@ function TablePaginationDemo() {
     setPage(0);
   };
 
-  const paginatorStyle = {
-    "backgroundColor" : 'aquamarine',
-  }
-
   return (
-    <TablePagination
-      style={paginatorStyle}
-      component="div"
-    //   count={100}
-      count={100}
-      page={page}
-      onChangePage={handleChangePage}
-      rowsPerPage={rowsPerPage}
-      onChangeRowsPerPage={handleChangeRowsPerPage}
-    />
+    <div>
+      {console.log(documents)}
+      <TablePagination
+        style={Styles.paginatorStyle}
+        component="div"
+        count={documents.length}
+        page={page}
+        onChangePage={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
+    </div>
   );
 }
-export default TablePaginationDemo
+export default TablePaginationDemo;
+
+const Styles = {
+  paginatorStyle: {
+    backgroundColor: "aquamarine",
+  },
+};

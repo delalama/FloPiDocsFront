@@ -56,9 +56,6 @@ export default function FullScreenDialog({refreshTable}) {
     setIconsInitValue();
   };
 
-  const dateFormStyle = {
-    'justify-content' : 'center',
-  }
 
   function setIconsInitValue(){
       setTitleIconDisplay(false);
@@ -88,7 +85,7 @@ export default function FullScreenDialog({refreshTable}) {
 
 
   return (
-    <div>
+    <div >
       <Button variant="contained" onClick={handleClickOpen}>
         {StringsFloPi.newDocument}
       </Button>
@@ -119,17 +116,17 @@ export default function FullScreenDialog({refreshTable}) {
         </AppBar>
         <List>
           <form className={classes.root} noValidate autoComplete="off">
-            <ListItem style={dateFormStyle}>
+            <ListItem style={Styles.dateFormStyle}>
             <TextField id="newDocTitle" label={StringsFloPi.title} onChange={onChangeTitle}/>
             {titleIconDisplay && <CheckIcon></CheckIcon>}
           </ListItem>
 
-            <ListItem style={dateFormStyle}>
+            <ListItem style={Styles.dateFormStyle}>
             <TextField id="newDocPurpose" label={StringsFloPi.purpose} onChange={onChangePurpose}/>
             {purposeIconDisplay && <CheckIcon></CheckIcon>}
           </ListItem>
 
-            <ListItem  style={dateFormStyle}>
+            <ListItem  style={Styles.dateFormStyle}>
             <TextField id="newDocContent" label={StringsFloPi.description} />
           </ListItem>
             
@@ -138,4 +135,16 @@ export default function FullScreenDialog({refreshTable}) {
       </Dialog>
     </div>
   );
+}
+
+const Styles = {
+  rightAlign: {
+    position: "absolute",
+    right: "0px",
+    width: "13vw",
+    marginRight: "2vw",
+  },
+  dateFormStyle : {
+    'justify-content' : 'center',
+  }
 }

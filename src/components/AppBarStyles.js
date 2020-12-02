@@ -8,6 +8,7 @@ export  const AppBarStyles = makeStyles((theme: Theme) =>
     },
     menuButton: {
       marginRight: theme.spacing(2),
+
     },
     title: {
       flexGrow: 1,

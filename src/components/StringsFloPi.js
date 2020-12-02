@@ -1,5 +1,5 @@
 const Dictionary = {
-    newDocument : 'New FloπDoc',
+    newDocument : 'New Doc',
     newField : 'New Field',
     title : 'Title *',
     purpose : 'Purpose *',
@@ -12,6 +12,7 @@ const Dictionary = {
     fieldName: 'Field Name',
     fieldValue: 'Field Value',
     editDocument: 'EDIT DOCUMENT',
+    exportDocument: 'EXPORT DOCUMENT',
 }
 
 export default Dictionary;

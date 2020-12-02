@@ -2,8 +2,11 @@ import React, { useState, createContext, useContext, useEffect } from "react";
 import "./App.css";
 import AppBar from "./components/AppBar";
 import LoginForm from "./components/LoginFom";
-import CollapsibleTable from "./components/DocumentsTable";
+import MainTable from "./components/DocumentsTable";
 import useDocuments from "./request/useDocuments";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Container from "react-bootstrap/Container";
+import { useMediaQuery } from "react-responsive";
 
 export const DocumentsContext = createContext({
   documents: [],
@@ -43,42 +46,48 @@ function App() {
     setShowTable(false);
   }
 
+  const isMobileVertical = useMediaQuery({ maxWidth: 550 });
+
   return (
     <div className="App">
       <header className="App-header">
-        <div>
-          <SearchContext.Provider
-            value={{
-              search,
-            }}
-          >
-            {showTable && <AppBar refreshTable={refresh} logOut={() => logOut()} />}
-          </SearchContext.Provider>
+        <Container fluid>
+          <div>
+            <SearchContext.Provider
+              value={{
+                search,
+              }}
+            >
+              {showTable && !isMobileVertical &&(
+                <AppBar refreshTable={refresh} logOut={() => logOut()} />
+              )}
+            </SearchContext.Provider>
 
-          <DocumentsContext.Provider
-            value={{
-              documents,
-              refresh,
-              clear,
-              deleteDocument,
-              updateDocument,
-              SaveDocuments,
-            }}
-          >
-            {!showTable && (
-              <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
-            )}
+            <DocumentsContext.Provider
+              value={{
+                documents,
+                refresh,
+                clear,
+                deleteDocument,
+                updateDocument,
+                SaveDocuments,
+              }}
+            >
+              {!showTable && (
+                <LoginForm onUserLogin={handleOnUserLogin}></LoginForm>
+              )}
 
-            {showTable && (
-              <>
-                <CollapsibleTable
-                  searching={searchingDocuments}
-                  refresh={() => refresh()}
-                />
-              </>
-            )}
-          </DocumentsContext.Provider>
-        </div>
+              {showTable && (
+                <>
+                  <MainTable
+                    searching={searchingDocuments}
+                    refresh={() => refresh()}
+                  />
+                </>
+              )}
+            </DocumentsContext.Provider>
+          </div>
+        </Container>
       </header>
       <div></div>
     </div>
