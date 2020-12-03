@@ -77,16 +77,11 @@ export default function EditDocumentDialog(props) {
         document.getElementById("purposeValue").value === ""
           ? purpose
           : document.getElementById("purposeValue").value,
-      contentPost:
-        document.getElementById("contentValue").value === ""
-          ? content
-          : document.getElementById("contentValue").value,
       datePost: date,
     };
     const documentValuesChanged =
       docValues.titlePost !== title ||
-      docValues.purposePost !== purpose ||
-      docValues.contentPost !== content;
+      docValues.purposePost !== purpose
 
     if (documentValuesChanged) {
       updateDocument(
@@ -95,7 +90,6 @@ export default function EditDocumentDialog(props) {
           docValues.userId,
           docValues.titlePost,
           docValues.purposePost,
-          docValues.contentPost,
           docValues.datePost
         )
       );
@@ -105,7 +99,6 @@ export default function EditDocumentDialog(props) {
 
   const title = props.row.title;
   const purpose = props.row.purpose;
-  const content = props.row.content;
   const date = props.row.date;
   const documentId = props.row.id;
 
@@ -134,14 +127,9 @@ export default function EditDocumentDialog(props) {
             <div>
               <TextField id="purposeValue" label={purpose} />
             </div>
-            <div>
-              <TextField id="contentValue" label={content} />
-            </div>
             <Divider></Divider>
-            <div>
-              <TextField id="contentValue" label="tags" />
-            </div>
           </form>
+          
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={handleClose} color="secondary">

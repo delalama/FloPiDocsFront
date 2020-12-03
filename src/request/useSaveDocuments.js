@@ -1,14 +1,13 @@
 import getEndPoint from "../utilities/Endpoints";
 import { DocumentDtoNoIdAndDate } from "../classes/document";
 
-function SaveDocuments(title, purpose, content) {
+function SaveDocuments(title, purpose) {
   const userId = localStorage.getItem("userId");
   const query = getEndPoint("document");
   const documentDto = new DocumentDtoNoIdAndDate(
     userId,
     title,
     purpose,
-    content
   );
   const requestOptions = {
     method: "POST",

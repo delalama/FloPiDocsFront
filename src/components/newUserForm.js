@@ -143,6 +143,7 @@ export default function NewUserForm() {
         <ListItem className={newUserFormclasses.dataForm}>
           <TextField
             id="newUserPassword"
+            type="password"
             label={StringsFloPi.password}
             onChange={onChangeFieldText}
           />

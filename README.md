@@ -1,68 +1,77 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# FloPiDocsBack
+Spring project to manage private documents
 
-## Available Scripts
+The purpose of this project is to manage private documents, pictures , notes or thoughts in a private, fast and simplistic way.
 
-In the project directory, you can run:
+# With FloPiDocs you can:
 
-### `npm start`
+- Create your new user
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/1-New%20user%20and%20login.gif)
+---
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Create a new document
+- Once you create your document you have the possibility to add fields that holds the document information.
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/2-%20New%20document.gif)
+---
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+- Create a image field
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/3-ImageField.gif)
+---
 
-### `npm test`
+- Edit your fields
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/4-FieldEdit.gif)
+---
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Search documents by title, purpose.
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/4-SearchBy.gif)
+---
 
-### `npm run build`
+- Create document tags to have a faster way to find documents
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/5%20-%20createTag.gif)
+---
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Zoom your saved images.
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/5-%20ImageZoom.gif)
+---
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+- Change delete mode to save to avoid errors.
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/7-SaveDelete.gif)
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Export your documents
+---
+![Alt Text](https://github.com/delalama/FloPiDocsBack/blob/master/docu/gifs/8-exportDocument.gif)
+---
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# Links i needed
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Best practices to write your API
+https://medium.com/@mwaysolutions/10-best-practices-for-better-restful-api-cbe81b06f291
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+JPA queries
+https://www.baeldung.com/spring-jpa-like-queries
+https://www.baeldung.com/queries-in-spring-data-mongodb
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Mongo
+https://www.devglan.com/spring-boot/spring-data-mongodb-queries
 
-## Learn More
+Unit tests
+https://www.freecodecamp.org/news/unit-testing-services-endpoints-and-repositories-in-spring-boot-4b7d9dc2b772/
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Export pdf
+https://www.baeldung.com/java-pdf-creation
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+ByteArrayInputStream controller
+https://rieckpil.de/howto-up-and-download-files-with-react-and-spring-boot/
 
-### Code Splitting
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify

@@ -57,8 +57,9 @@ const DialogActions = withStyles((theme) => ({
 }))(MuiDialogActions);
 
 export default function EditDialogs(props) {
-  const {fieldId, fieldName: preFieldName, fieldValue:preFieldValue, fieldPicture: preFieldPicture}= props;
+  const {fieldId, fieldName: preFieldName, fieldValue:preFieldValue, fieldPicture: preFieldPicture} = props;
  
+  let isFieldValueNull = preFieldValue !== null ;
   const [open, setOpen] = useState(false);
   const {UpdateFields} = useSaveFields();
 
@@ -72,6 +73,7 @@ export default function EditDialogs(props) {
 
   const handleCloseOnEdit = () => {
     let fieldName = document.getElementById("fieldName").value;
+    
     let fieldValue = document.getElementById("fieldValue").value;
 
     let fieldNameEmpty = fieldName === "";
@@ -107,18 +109,15 @@ export default function EditDialogs(props) {
         aria-labelledby="customized-dialog-title"
         open={open}
       >
-      setOpen(false);
-    };
-  
-    const fieldId = props.fieldId;
-    const preFieldName = props.fieldName;
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           Edit screen
         </DialogTitle>
         <DialogContent dividers>
           <form noValidate autoComplete="off">
             <TextField id="fieldName" label={preFieldName} />
+            {isFieldValueNull && (
             <TextField id="fieldValue" label={preFieldValue} />
+            )}  
             <img src={preFieldPicture} style={Styles.Picture}/>
           </form>
         </DialogContent>

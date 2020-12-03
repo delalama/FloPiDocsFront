@@ -6,22 +6,20 @@ class DocumentIdAndUserID {
 }
 
 class DocumentDto {
-  constructor(id, userId, title, purpose, content, date) {
+  constructor(id, userId, title, purpose, date) {
     this.id = id;
     this.userId = userId;
     this.title = title;
     this.purpose = purpose;
-    this.content = content;
     this.date = date;
   }
 }
 
 class DocumentDtoNoIdAndDate {
-  constructor(userId, title, purpose, content) {
+  constructor(userId, title, purpose) {
     this.userId = userId;
     this.title = title;
     this.purpose = purpose;
-    this.content = content;
   }
 }
 export { DocumentIdAndUserID, DocumentDto, DocumentDtoNoIdAndDate };

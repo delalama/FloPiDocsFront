@@ -14,7 +14,7 @@ export default function ImageUploaderComponent({onUploadImage}) {
       withPreview={true}
       buttonText="Choose image"
       onChange={onDrop}
-      imgExtension={[".jpg", ".gif", ".png", ".gif"]}
+      imgExtension={[".jpg", ".gif", ".png", ".gif", "jpeg"]}
       maxFileSize={5242880}
       singleImage={true}
       withLabel={true}

@@ -108,7 +108,7 @@ export default function MainTable({ searching }) {
           component={Paper}
           id="documentsTable"
         >
-          <Table aria-label="collapsible table">
+          <Table aria-label="collapsible table" style={Styles.tableBodyStyle}>
             <TableHead style={Styles.tableHeadStyle}>
               <TableRow>
                 <TableCell id="selectColumn"></TableCell>
@@ -129,7 +129,7 @@ export default function MainTable({ searching }) {
               </TableRow>
             </TableHead>
             {!refreshTableState && (
-              <TableBody style={Styles.tableBodyStyle}>
+              <TableBody >
                 {documents
                   ?.map(({ id, title, purpose, date }) =>
                     createData(id, title, purpose, date)
@@ -163,7 +163,7 @@ function Document(props) {
   }
 
   return (
-    <React.Fragment>
+    <React.Fragment style={Styles.tableBodyStyle}>
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={2}>
           <Collapse
@@ -255,34 +255,34 @@ function FieldList({ fields, searching, rowId, refreshFields }) {
         )
         .map((field, index) => (
           <TableRow key={field.id} className={classes.root}>
-            <TableCell></TableCell>
-            <TableCell colSpan="2" style={Styles.fieldStyle}>
+            {/* <TableCell style={Styles.fieldRow}></TableCell> */}
+            <TableCell style={Styles.fieldRow} colSpan="2" style={Styles.fieldStyle}>
               {field.fieldName}
             </TableCell>
             {field.fieldValue !== null && (
-              <TableCell colSpan="2" style={Styles.fieldStyle}>
+              <TableCell style={Styles.fieldRow} colSpan="2" style={Styles.fieldStyle}>
                 {field.fieldValue}
               </TableCell>
             )}
 
-            <TableCell colSpan="1" style={Styles.fieldStyle}>
-              {/* <img src={field.fieldPicture} style={Styles.pictureStyle} /> */}
+          {field.fieldValue == null && (
+            <TableCell colSpan="2" style={Styles.fieldStyle}>
 
               <Zoom>
                 <img src={field.fieldPicture} style={Styles.pictureStyle} />
               </Zoom>
             </TableCell>
-
-            <TableCell>
-              <EditDialogs
+          )}
+            <TableCell style={Styles.fieldRow}>
+              {field.fieldValue!==null && (<EditDialogs
                 fieldId={field.id}
                 fieldName={field.fieldName}
                 fieldValue={field.fieldValue}
                 fieldPicture={field.fieldPicture}
                 refreshFields={() => refreshFields(rowId)}
-              ></EditDialogs>
+              ></EditDialogs>)}
             </TableCell>
-            <TableCell>
+            <TableCell style={Styles.fieldRow}>
               <DeleteFieldDialogs
                 rowId={rowId}
                 fieldId={field.id}
@@ -313,6 +313,11 @@ const Styles = {
   },
   tableBodyStyle: {
     backgroundColor: "wheat",
+    borderCollapse: "collapse",
+    border: "1px solid black",
+  },
+  fieldRow: {
+    backgroundColor: "burlywood",  
   },
   upperTitleColumnNameStyle: {
     textAlign: "center",
@@ -324,6 +329,9 @@ const Styles = {
   pictureStyle: {
     width: "5vw",
   },
+  documentBorder: {
+    borderCollapse: "collapse",
+  },
   fieldStyle: {
     color: "black",
     fontFamily: "monospace",
@@ -332,5 +340,6 @@ const Styles = {
     whiteSpace: "nowrap",
     overflow: "overlay",
     maxWidth: "25vw",
+    backgroundColor: "burlywood",  
   },
 };

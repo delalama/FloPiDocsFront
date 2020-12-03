@@ -43,9 +43,8 @@ export default function FullScreenDialog({refreshTable}) {
   const handleCloseOnSave = () => {
     const title = document.getElementById('newDocTitle').value;
     const purpose = document.getElementById('newDocPurpose').value;
-    const content = document.getElementById('newDocContent').value;
 
-    SaveDocuments(title,purpose,content);
+    SaveDocuments(title,purpose);
     setIconsInitValue();
     refreshTable && refreshTable(true);
     setOpen(false);
@@ -124,10 +123,6 @@ export default function FullScreenDialog({refreshTable}) {
             <ListItem style={Styles.dateFormStyle}>
             <TextField id="newDocPurpose" label={StringsFloPi.purpose} onChange={onChangePurpose}/>
             {purposeIconDisplay && <CheckIcon></CheckIcon>}
-          </ListItem>
-
-            <ListItem  style={Styles.dateFormStyle}>
-            <TextField id="newDocContent" label={StringsFloPi.description} />
           </ListItem>
             
           </form>

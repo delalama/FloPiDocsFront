@@ -50,17 +50,12 @@ export default function FullScreenEditDocument(props) {
       document.getElementById("editDocPurpose").value === ""
         ? row.purpose
         : document.getElementById("editDocPurpose").value;
-    const content =
-      document.getElementById("editDocContent").value === ""
-        ? row.content
-        : document.getElementById("editDocContent").value;
 
     const documentDto = new DocumentDto(
       row.id,
       localStorage.getItem("userId"),
       title,
       purpose,
-      content,
       row.date
     );
 
@@ -100,14 +95,6 @@ export default function FullScreenEditDocument(props) {
     } else setPurposeIconDisplay(false);
   }
 
-  const [contentIconDisplay, setContentIconDisplay] = useState(false);
-
-  function onChangeContent(event) {
-    var value = event.target.value;
-    if (value.length > 0) {
-      setContentIconDisplay(true);
-    } else setContentIconDisplay(false);
-  }
 
   function openAddTag() {
     setOpenNewTag(!openNewTag);
@@ -144,7 +131,7 @@ export default function FullScreenEditDocument(props) {
               color="inherit"
               onClick={handleCloseOnSave}
               disabled={
-                !titleIconDisplay && !purposeIconDisplay && !contentIconDisplay
+                !titleIconDisplay && !purposeIconDisplay 
               }
             >
               EDIT DOCUMENT
@@ -171,14 +158,6 @@ export default function FullScreenEditDocument(props) {
               {purposeIconDisplay && <CheckIcon></CheckIcon>}
             </ListItem>
 
-            <ListItem style={Styles.dateFormStyle}>
-              <TextField
-                id="editDocContent"
-                label={row.content}
-                onChange={onChangeContent}
-              />
-              {contentIconDisplay && <CheckIcon></CheckIcon>}
-            </ListItem>
           </form>
 
             <ListItem style={Styles.dateFormStyle}>
