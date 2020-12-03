@@ -1,5 +1,11 @@
 # FloPiDocsBack
-Spring project to manage private documents
+React project to manage private documents
+Personal challenge to know about react and js.
+
+You can find inside the project examples of:
+UseState
+UseContext
+
 
 The purpose of this project is to manage private documents, pictures , notes or thoughts in a private, fast and simplistic way.
 
@@ -54,24 +60,21 @@ The purpose of this project is to manage private documents, pictures , notes or 
 
 # Links i needed
 
-Best practices to write your API
-https://medium.com/@mwaysolutions/10-best-practices-for-better-restful-api-cbe81b06f291
+React introduction
+https://es.reactjs.org/tutorial/tutorial.html
 
-JPA queries
-https://www.baeldung.com/spring-jpa-like-queries
-https://www.baeldung.com/queries-in-spring-data-mongodb
+Testing
+https://www.robinwieruch.de/react-testing-library
 
-Mongo
-https://www.devglan.com/spring-boot/spring-data-mongodb-queries
+
+React responsive
+https://www.npmjs.com/package/react-responsive
 
 Unit tests
 https://www.freecodecamp.org/news/unit-testing-services-endpoints-and-repositories-in-spring-boot-4b7d9dc2b772/
 
-Export pdf
-https://www.baeldung.com/java-pdf-creation
-
-ByteArrayInputStream controller
-https://rieckpil.de/howto-up-and-download-files-with-react-and-spring-boot/
+React component to download files
+https://github.com/axetroy/react-download
 
 
 
