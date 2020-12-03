@@ -72,7 +72,6 @@ export default function FullScreenFieldsCreator({
 
   function afterSave() {
     setIconsInitValue();
-    // DEADVID, no entiendo esta nomenclatura
     setTimeout(() => {
       refreshFieldsFromFieldsCreator && refreshFieldsFromFieldsCreator();
     }, 10);

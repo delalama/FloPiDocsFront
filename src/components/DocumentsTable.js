@@ -100,7 +100,7 @@ export default function MainTable({ searching }) {
       {isMobileVertical && (
         <h6 style={Styles.message}>PLEASE TURN YOUR DEVICE HORIZONTAL</h6>
       )}
-      {/* TODO , NO FUNCIONA EL SPINNER */}
+
       {searchingDocuments && <CircularIndeterminate></CircularIndeterminate>}
       {!emptyDocuments && !isMobileVertical && (
         <TableContainer

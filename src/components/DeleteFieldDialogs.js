@@ -88,8 +88,6 @@ export default function DeleteFieldDialogs(props) {
       setOpen(false);
   };
 
-  //TODO JOAN, añadir aquí mediante REDUX un cambio de estado que se propague hasta getFields, 
-  // de modo que cuando borre un field se recarguen los fields!!
 
   return (
     <div>

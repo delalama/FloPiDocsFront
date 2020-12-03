@@ -96,4 +96,3 @@ function App() {
 
 export default App;
 
-// TODO aprender userRef para sustituir todos los "getElementById"

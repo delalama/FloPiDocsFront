@@ -22,7 +22,6 @@ function useSaveFields(fieldName, fieldValue, documentId) {
   
   function savePicture(fieldName, fieldPicture, documentId){
     const query = getEndPoint("saveField");
-//TODO ACTUAL, PENSAR COMO GUARDAR LA FOTO
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
